@@ -1,4 +1,4 @@
-@(message: String, issues: List[models.Issue])
+@(message: String, issues: List[models.Issue], links: Map[String, String])
 
 @main("Issues") {
     <div class="well">
@@ -39,4 +39,5 @@
         }
         </tbody>
     </table>
+    @pagination(links)
 </div>

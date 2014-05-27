@@ -1,0 +1,15 @@
+@(links: Map[String, String])
+<div>
+    <ul class="pager">
+        @if(links.get("prev").isDefined) {
+            <li class="previous"><a href="@(links.get("prev").get)">&larr; Prev</a></li>
+        } else {
+            <li class="previous disabled"><a>&larr; Prev</a></li>
+        }
+        @if(links.get("next").isDefined) {
+            <li class="next"><a href="@(links.get("next").get)">Next &rarr;</a></li>
+        } else {
+            <li class="next disabled"><a>Next &rarr;</a></li>
+        }
+    </ul>
+</div>
