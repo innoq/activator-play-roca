@@ -18,7 +18,7 @@ create table issue (
   open_date                 bigint,
   close_date                bigint,
   close_action              varchar(255),
-  userid                    bigint,
+  user_name                 varchar(255),
   comment                   clob,
   constraint pk_issue primary key (id))
 ;
@@ -31,20 +31,10 @@ create table service_arguments (
   constraint pk_service_arguments primary key (id))
 ;
 
-create table user (
-  id                        bigint not null,
-  name                      varchar(255),
-  constraint pk_user primary key (id))
-;
-
 create sequence issue_seq;
 
 create sequence service_arguments_seq;
 
-create sequence user_seq;
-
-alter table issue add constraint fk_issue_assignedUser_1 foreign key (USER_NAME) references user (id) on delete restrict on update restrict;
-create index ix_issue_assignedUser_1 on issue (USER_NAME);
 alter table service_arguments add constraint fk_service_arguments_issue_2 foreign key (issue_id) references issue (id) on delete restrict on update restrict;
 create index ix_service_arguments_issue_2 on service_arguments (issue_id);
 

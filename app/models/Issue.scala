@@ -10,7 +10,7 @@ import anorm.~
 case class Issue(id: Long, projectName: String, priority: String, issueType: String, summary: String,
                  exceptionStackTrace: String, description: String, reporter: String, componentName: String,
                  componentVersion: String, processingState: String, openDate: Date, closeDate: Date,
-                 closeAction: String, user: Long, comment: String)
+                 closeAction: String, userName: String, comment: String)
 
 object Issue {
 
@@ -29,7 +29,7 @@ object Issue {
       get[Long]("open_date") ~
       get[Long]("close_date") ~
       get[String]("close_action") ~
-      get[Long]("userid") ~
+      get[String]("user_name") ~
       get[String]("comment") map {
       case id ~ projectName ~ priority ~ issueType ~ summary ~ exceptionStackTrace ~ description ~ reporter ~ componentName ~ componentVersion ~ processingState ~ openDate ~ closeDate ~ closeAction ~ user ~ comment =>
         Issue(id.get, projectName, priority, issueType, summary, exceptionStackTrace, description, reporter, componentName, componentVersion, processingState, new Date(openDate), new Date(closeDate), closeAction, user, comment)
@@ -47,8 +47,8 @@ object Issue {
     DB.withConnection {
       implicit connection =>
         SQL( """
-            INSERT INTO Issue(id, project_name, priority, issue_type, summary, exception_stack_trace, description, reporter, component_name, component_version, processing_state, open_date, close_date, close_action, userid, comment)
-            VALUES({id}, {projectName}, {priority}, {issueType}, {summary}, {exceptionStackTrace}, {description}, {reporter}, {componentName}, {componentVersion}, {processingState}, {openDate}, {closeDate}, {closeAction}, {user}, {comment})
+            INSERT INTO Issue(id, project_name, priority, issue_type, summary, exception_stack_trace, description, reporter, component_name, component_version, processing_state, open_date, close_date, close_action, user_name, comment)
+            VALUES({id}, {projectName}, {priority}, {issueType}, {summary}, {exceptionStackTrace}, {description}, {reporter}, {componentName}, {componentVersion}, {processingState}, {openDate}, {closeDate}, {closeAction}, {userName}, {comment})
              """).on(
           'id -> issue.id,
           'projectName -> issue.projectName,
@@ -64,7 +64,7 @@ object Issue {
           'openDate -> issue.openDate.getTime,
           'closeDate -> issue.closeDate.getTime,
           'closeAction -> issue.closeAction,
-          'user -> issue.user,
+          'userName -> issue.userName,
           'comment -> issue.comment).executeUpdate
     }
   }
