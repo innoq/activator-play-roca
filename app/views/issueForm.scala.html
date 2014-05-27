@@ -1,0 +1,48 @@
+@(issueForm: Form[Issue])
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@main("Issue") {
+
+<div class="well">
+    <h1>Issue</h1>
+
+    @helper.form(action = routes.Application.submit()) {
+
+    <fieldset>
+        @inputText(
+        issueForm("projectName"),
+        '_label -> "Project name",
+        '_help -> "Please enter a valid project name.",
+        '_error -> issueForm.error("projectName"))
+
+        @inputText(
+        issueForm("projectName"),
+        '_label -> "Project name",
+        '_help -> "Please enter a valid project name.",
+        '_error -> issueForm.error("projectName"))
+
+        @inputText(
+        issueForm("projectName"),
+        '_label -> "Project name",
+        '_help -> "Please enter a valid project name.",
+        '_error -> issueForm.error("projectName"))
+
+        @inputText(
+        issueForm("projectName"),
+        '_label -> "Project name",
+        '_help -> "Please enter a valid project name.",
+        '_error -> issueForm.error("projectName"))
+
+    </fieldset>
+
+    <div class="actions">
+        <input type="submit" class="btn primary" value="Submit">
+        <a href="@routes.Application.issues()" class="btn">Cancel</a>
+    </div>
+
+    }
+</div>
+
+}

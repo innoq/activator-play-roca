@@ -18,7 +18,7 @@ create table issue (
   open_date                 bigint,
   close_date                bigint,
   close_action              varchar(255),
-  user_name                 varchar(255),
+  assignee                  varchar(255),
   comment                   clob,
   constraint pk_issue primary key (id))
 ;
