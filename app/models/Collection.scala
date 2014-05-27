@@ -1,14 +1,16 @@
 package models
 
+import _root_.java.lang.Math
+
 case class Collection[T](items: List[T], offset: Int, total: Long) {
 
-  def hasNext = (items.size + offset) < total
+  def hasNext = nextOffset < total
 
   def hasPrevious = offset > 0
 
-  val maxCount = 10
+  def nextOffset = offset + items.size
 
-  def nextOffset = offset + maxCount
+  def previousOffset = Math.max(0, offset-items.size)
 
   def displaying = {
     if (!items.isEmpty) {
