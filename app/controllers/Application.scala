@@ -9,11 +9,11 @@ object Application extends Controller {
     Ok(views.html.index("Hello Play Framework"))
   }
 
-  def issues = Action {
+  def issues(offset: Int, count: Int) = Action {
     Issue.save(Issue(System.currentTimeMillis(), "projectName", "priority", "issueType", "summary", new Exception().toString,
       "description", "reporter", "componentName", "componentVersion", "processingState", new Date(), new Date(), "closeAction",
       "hannes", "comment"))
-    val l = Issue.list
-    Ok(views.html.issues("List of " + l.size + " issue(s)", l))
+    val issues = Issue.load(offset, count)
+    Ok(views.html.issues("List of " + issues.items.size + " issue(s) (total: " + issues.total + ")", issues.items))
   }
 }
