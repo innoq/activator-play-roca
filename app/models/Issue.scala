@@ -27,7 +27,7 @@ object Issue {
 
   private val issueParser: RowParser[Issue] = {
     get[Pk[Long]]("id") ~
-      get[String]("project_name") ~
+      get[Option[String]]("project_name") ~
       get[Option[String]]("priority") ~
       get[Option[String]]("issue_type") ~
       get[String]("summary") ~
@@ -44,7 +44,7 @@ object Issue {
       get[Option[String]]("comment") map {
       case id ~ projectName ~ priority ~ issueType ~ summary ~ exceptionStackTrace ~ description ~ reporter ~
         componentName ~ componentVersion ~ processingState ~ openDate ~ closeDate ~ closeAction ~ assignee ~ comment =>
-        Issue(id.get, Option(projectName), priority, issueType, summary, exceptionStackTrace,
+        Issue(id.get, projectName, priority, issueType, summary, exceptionStackTrace,
           description, reporter, componentName, componentVersion, processingState,
           new Date(openDate), closeDate.map(new Date(_)), closeAction, assignee, comment)
     }

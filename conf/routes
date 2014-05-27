@@ -4,7 +4,7 @@
 
 GET     /                           controllers.Application.index()
 GET     /issues                     controllers.Application.issues(offset: Int ?= 0, count: Int ?= 10)
-GET     /issues_new                 controllers.Application.newIssue()
+GET     /new_issue                  controllers.Application.newIssue()
 POST    /issues                     controllers.Application.submit()
 
 # Map static resources from the /public folder to the /assets URL path
