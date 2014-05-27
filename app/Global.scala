@@ -12,7 +12,7 @@ object Global extends GlobalSettings {
     if(issues.total < 10) {
       for (i <- 1 to 11)
         Issue.save(Issue(System.currentTimeMillis()+i, "projectName", "priority", "issueType", "summary", new Exception().toString,
-          "description", "reporter", "componentName", "componentVersion", "processingState", new Date(), new Date(), "closeAction",
+          "description", users(Random.nextInt(3)), "componentName", "componentVersion", "processingState", new Date(), new Date(), "closeAction",
           users(Random.nextInt(3)), "comment"))
       Logger.debug("Added 11 new issues")
     }
