@@ -12,6 +12,6 @@ object Application extends Controller {
   def issues = Action {
     Issue.save(Issue(System.currentTimeMillis(), "projectName", "priority", "issueType", "summary", new Exception().toString, "description", "reporter", "componentName", "componentVersion", "processingState", new Date(), new Date(), "closeAction", 123, "comment"))
     val l = Issue.list
-    Ok(views.html.issues("List of " + l.size + " issue(s)"))
+    Ok(views.html.issues("List of " + l.size + " issue(s)", l))
   }
 }
