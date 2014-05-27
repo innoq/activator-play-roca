@@ -36,19 +36,26 @@ object Issue {
     }
   }
 
-  def list() = {
-    DB.withConnection {
+  def load(offset: Int, count: Int) = {
+    val issues = DB.withConnection {
       implicit c =>
-        SQL("Select * from Issue").as(issueParser *)
+        SQL("select * from issue limit {limit} offset {offset}")
+          .on("limit" -> count, "offset" -> offset)
+          .as(issueParser *)
     }
+    val total = DB.withConnection {
+      implicit c =>
+        SQL("select count(*) from issue").as(scalar[Long].single)
+    }
+    Collection(issues, offset, total)
   }
 
   def save(issue: Issue) = {
     DB.withConnection {
       implicit connection =>
         SQL( """
-            INSERT INTO Issue(id, project_name, priority, issue_type, summary, exception_stack_trace, description, reporter, component_name, component_version, processing_state, open_date, close_date, close_action, user_name, comment)
-            VALUES({id}, {projectName}, {priority}, {issueType}, {summary}, {exceptionStackTrace}, {description}, {reporter}, {componentName}, {componentVersion}, {processingState}, {openDate}, {closeDate}, {closeAction}, {userName}, {comment})
+            insert into issue(id, project_name, priority, issue_type, summary, exception_stack_trace, description, reporter, component_name, component_version, processing_state, open_date, close_date, close_action, user_name, comment)
+            values({id}, {projectName}, {priority}, {issueType}, {summary}, {exceptionStackTrace}, {description}, {reporter}, {componentName}, {componentVersion}, {processingState}, {openDate}, {closeDate}, {closeAction}, {userName}, {comment})
              """).on(
           'id -> issue.id,
           'projectName -> issue.projectName,
