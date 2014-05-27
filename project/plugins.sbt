@@ -21,4 +21,4 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.0-M2a")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.0.0-M2a")
 
-addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.5.1")
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.5.2")
