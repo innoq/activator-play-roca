@@ -10,8 +10,6 @@ case class Collection[T](items: List[T], offset: Int, total: Long) {
 
   def nextOffset = offset + items.size
 
-  def previousOffset = Math.max(0, offset-items.size)
-
   def displaying = {
     if (!items.isEmpty) {
       val from = offset + 1

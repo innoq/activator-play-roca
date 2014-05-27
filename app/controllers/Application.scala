@@ -37,7 +37,7 @@ object Application extends Controller {
 
     var links = Map[String, String]()
     if(issues.hasPrevious)
-      links += ("prev" -> routes.Application.issues(issues.previousOffset, count).toString)
+      links += ("prev" -> routes.Application.issues(Math.max(0, offset-count), count).toString)
     if(issues.hasNext)
       links += ("next" -> routes.Application.issues(issues.nextOffset, count).toString)
 
