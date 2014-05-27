@@ -14,14 +14,12 @@ create table issue (
   reporter                  varchar(255),
   component_name            varchar(255),
   component_version         varchar(255),
-  processing_state          varchar(7),
+  processing_state          varchar(255),
   open_date                 bigint,
   close_date                bigint,
-  close_action              varchar(8),
-  USER_NAME                 bigint,
+  close_action              varchar(255),
+  userid                    bigint,
   comment                   clob,
-  constraint ck_issue_processing_state check (processing_state in ('OPEN','CLAIMED','CLOSED')),
-  constraint ck_issue_close_action check (close_action in ('RETRY','ABORT','COMPLETE')),
   constraint pk_issue primary key (id))
 ;
 

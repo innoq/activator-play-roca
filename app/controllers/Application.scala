@@ -2,6 +2,7 @@ package controllers
 
 import play.api.mvc.{Action, Controller}
 import models.Issue
+import java.util.Date
 
 object Application extends Controller {
   def index = Action {
@@ -9,7 +10,8 @@ object Application extends Controller {
   }
 
   def issues = Action {
-    Issue.list
-    Ok(views.html.issues("List of issues"))
+    Issue.save(Issue(System.currentTimeMillis(), "projectName", "priority", "issueType", "summary", new Exception().toString, "description", "reporter", "componentName", "componentVersion", "processingState", new Date(), new Date(), "closeAction", 123, "comment"))
+    val l = Issue.list
+    Ok(views.html.issues("List of " + l.size + " issue(s)"))
   }
 }
