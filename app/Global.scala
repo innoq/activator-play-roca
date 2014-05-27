@@ -11,9 +11,9 @@ object Global extends GlobalSettings {
     val users = List("Frank", "Michael", "Jacob")
     if(issues.total < 10) {
       for (i <- 1 to 11)
-        Issue.save(Issue(System.currentTimeMillis()+i, "projectName", "priority", "issueType", "summary", new Exception().toString,
-          "description", users(Random.nextInt(3)), "componentName", "componentVersion", "processingState", new Date(), new Date(), "closeAction",
-          users(Random.nextInt(3)), "comment"))
+        Issue.save(Issue(System.currentTimeMillis()+i, Some("projectName"), Some("priority"), Some("issueType"), "summary", Some(new Exception().toString),
+          Some("description"), users(Random.nextInt(users.size)), Some("componentName"), Some("componentVersion"), Some("processingState"), new Date(), Some(new Date()), Some("closeAction"),
+          Some(users(Random.nextInt(users.size))), Some("comment")))
       Logger.debug("Added 11 new issues")
     }
 
