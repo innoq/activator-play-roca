@@ -11,6 +11,7 @@ version := "1.0-SNAPSHOT"
 libraryDependencies ++= Seq(
   "org.webjars" %% "webjars-play" % "2.3-M1",
   "org.webjars" % "bootstrap" % "2.3.1",
+  "joda-time" % "joda-time" % "2.3",
   jdbc,
   anorm
 )

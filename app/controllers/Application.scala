@@ -4,7 +4,7 @@ import play.api.mvc.{Action, Controller}
 import models.Issue
 import play.api.data._
 import play.api.data.Forms._
-import java.util.Date
+import org.joda.time.DateTime
 
 object Application extends Controller {
   
@@ -20,8 +20,8 @@ object Application extends Controller {
       "componentName" -> optional(text),
       "componentVersion" -> optional(text),
       "processingState" -> optional(text),
-      "openDate" -> date,
-      "closeDate" -> optional(date),
+      "openDate" -> jodaDate,
+      "closeDate" -> optional(jodaDate),
       "closeAction" -> optional(text),
       "assignee" -> optional(text),
       "comment" -> optional(text)
@@ -49,7 +49,7 @@ object Application extends Controller {
   }
 
   def newIssue = Action {
-    Ok(views.html.issueForm(issueForm.fill(Issue.applyWithoutId(summary = "", reporter = "You", openDate = new Date()))))
+    Ok(views.html.issueForm(issueForm.fill(Issue.applyWithoutId(summary = "", reporter = "You", openDate = new DateTime))))
   }
 
   def submit = Action { implicit request =>

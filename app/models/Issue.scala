@@ -4,12 +4,12 @@ import play.api.db.DB
 import anorm._
 import play.api.Play.current
 import anorm.SqlParser._
-import java.util.Date
 import anorm.~
+import org.joda.time.DateTime
 
 case class Issue(id: Long, projectName: Option[String], priority: Option[String], issueType: Option[String], summary: String,
                  exceptionStackTrace: Option[String], description: Option[String], reporter: String, componentName: Option[String],
-                 componentVersion: Option[String], processingState: Option[String], openDate: Date, closeDate: Option[Date],
+                 componentVersion: Option[String], processingState: Option[String], openDate: DateTime, closeDate: Option[DateTime],
                  closeAction: Option[String], assignee: Option[String], comment: Option[String])
 
 object Issue {
@@ -17,7 +17,7 @@ object Issue {
   def applyWithoutId(projectName: Option[String] = None, priority: Option[String] = None, issueType: Option[String] = None,
                      summary: String, exceptionStackTrace: Option[String] = None, description: Option[String] = None,
                      reporter: String, componentName: Option[String] = None, componentVersion: Option[String] = None,
-                     processingState: Option[String] = None, openDate: Date, closeDate: Option[Date] = None,
+                     processingState: Option[String] = None, openDate: DateTime, closeDate: Option[DateTime] = None,
                      closeAction: Option[String] = None, assignee: Option[String] = None, comment: Option[String] = None) =
     this(System.currentTimeMillis(), projectName, priority, issueType, summary, exceptionStackTrace, description, reporter,
       componentName, componentVersion, processingState, openDate, closeDate, closeAction, assignee, comment)
@@ -47,7 +47,7 @@ object Issue {
         componentName ~ componentVersion ~ processingState ~ openDate ~ closeDate ~ closeAction ~ assignee ~ comment =>
         Issue(id.get, projectName, priority, issueType, summary, exceptionStackTrace,
           description, reporter, componentName, componentVersion, processingState,
-          new Date(openDate), closeDate.map(new Date(_)), closeAction, assignee, comment)
+          new DateTime(openDate), closeDate.map(new DateTime(_)), closeAction, assignee, comment)
     }
   }
 
@@ -85,8 +85,8 @@ object Issue {
           'componentName -> issue.componentName,
           'componentVersion -> issue.componentVersion,
           'processingState -> issue.processingState,
-          'openDate -> issue.openDate.getTime,
-          'closeDate -> issue.closeDate.map(_.getTime),
+          'openDate -> issue.openDate.getMillis,
+          'closeDate -> issue.closeDate.map(_.getMillis),
           'closeAction -> issue.closeAction,
           'assignee -> issue.assignee,
           'comment -> issue.comment).executeUpdate
