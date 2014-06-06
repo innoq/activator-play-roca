@@ -14,10 +14,11 @@ case class Issue(id: Long, projectName: Option[String], priority: Option[String]
 
 object Issue {
 
-  def applyWithoutId(projectName: Option[String], priority: Option[String], issueType: Option[String], summary: String,
-                     exceptionStackTrace: Option[String], description: Option[String], reporter: String, componentName: Option[String],
-                     componentVersion: Option[String], processingState: Option[String], openDate: Date, closeDate: Option[Date],
-                     closeAction: Option[String], assignee: Option[String], comment: Option[String]) =
+  def applyWithoutId(projectName: Option[String] = None, priority: Option[String] = None, issueType: Option[String] = None,
+                     summary: String, exceptionStackTrace: Option[String] = None, description: Option[String] = None,
+                     reporter: String, componentName: Option[String] = None, componentVersion: Option[String] = None,
+                     processingState: Option[String] = None, openDate: Date, closeDate: Option[Date] = None,
+                     closeAction: Option[String] = None, assignee: Option[String] = None, comment: Option[String] = None) =
     this(System.currentTimeMillis(), projectName, priority, issueType, summary, exceptionStackTrace, description, reporter,
       componentName, componentVersion, processingState, openDate, closeDate, closeAction, assignee, comment)
 

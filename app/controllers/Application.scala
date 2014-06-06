@@ -49,7 +49,7 @@ object Application extends Controller {
   }
 
   def newIssue = Action {
-    Ok(views.html.issueForm(issueForm.fill(Issue.applyWithoutId(None, None, None, "", None, None, "You", None, None, None, new Date(), None, None, None, None))))
+    Ok(views.html.issueForm(issueForm.fill(Issue.applyWithoutId(summary = "", reporter = "You", openDate = new Date()))))
   }
 
   def submit = Action { implicit request =>
