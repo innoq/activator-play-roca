@@ -1,89 +1,90 @@
 @(issueForm: Form[Issue])
 
 @import helper._
-@import helper.twitterBootstrap._
+@import helpers.FormHelper._
 
 @main("Issue") {
 
 <div class="well">
     <h1>Issue</h1>
 
-    @helper.form(action = routes.Application.submit()) {
+    @helper.form(action = routes.Application.submit, 'role -> "form") {
 
-    <fieldset>
-        @inputText(
-        issueForm("summary"),
-        '_label -> "Summary*",
-        '_help -> "Please enter a summary.",
-        '_error -> issueForm.error("summary"))
+    @inputText(
+    issueForm("summary"),
+    'class -> "form-control",
+    '_label -> "Summary*",
+    '_error -> issueForm.error("summary"))
 
-        @inputText(
-        issueForm("reporter"),
-        '_label -> "Reporter*",
-        '_help -> "Please enter your name.",
-        '_error -> issueForm.error("reporter"))
+    @inputText(
+    issueForm("reporter"),
+    'class -> "form-control",
+    '_label -> "Reporter*",
+    '_error -> issueForm.error("reporter"))
 
-        @inputText(
-        issueForm("openDate"),
-        '_label -> "Open date*",
-        '_help -> "When did the issue arise?",
-        '_error -> issueForm.error("openDate"))
+    @inputText(
+    issueForm("openDate"),
+    'class -> "form-control",
+    '_label -> "Open date*",
+    '_error -> issueForm.error("openDate"))
 
-        @inputText(
-        issueForm("projectName"),
-        '_label -> "Project name",
-        '_help -> "Please enter a valid project name.",
-        '_error -> issueForm.error("projectName"))
+    @inputText(
+    issueForm("projectName"),
+    'class -> "form-control",
+    '_label -> "Project name",
+    '_error -> issueForm.error("projectName"))
 
-        @inputText(
-        issueForm("priority"),
-        '_label -> "Priority",
-        '_help -> "Please choose the priority.",
-        '_error -> issueForm.error("priority"))
+    @inputText(
+    issueForm("priority"),
+    'class -> "form-control",
+    '_label -> "Priority",
+    '_error -> issueForm.error("priority"))
 
-        @inputText(
-        issueForm("issueType"),
-        '_label -> "Issue type",
-        '_help -> "Please choose the issue type.",
-        '_error -> issueForm.error("issueType"))
+    @inputText(
+    issueForm("issueType"),
+    'class -> "form-control",
+    '_label -> "Issue type",
+    '_error -> issueForm.error("issueType"))
 
-        @inputText(
-        issueForm("exceptionStackTrace"),
-        '_label -> "Exception stack trace",
-        '_error -> issueForm.error("exceptionStackTrace"))
+    @inputText(
+    issueForm("exceptionStackTrace"),
+    'class -> "form-control",
+    '_label -> "Exception stack trace",
+    '_error -> issueForm.error("exceptionStackTrace"))
 
-        @inputText(
-        issueForm("description"),
-        '_label -> "Description",
-        '_help -> "Please enter a description.",
-        '_error -> issueForm.error("description"))
+    @inputText(
+    issueForm("description"),
+    'class -> "form-control",
+    '_label -> "Description",
+    '_error -> issueForm.error("description"))
 
-        @inputText(
-        issueForm("componentName"),
-        '_label -> "Component name",
-        '_error -> issueForm.error("componentName"))
+    @inputText(
+    issueForm("componentName"),
+    'class -> "form-control",
+    '_label -> "Component name",
+    '_error -> issueForm.error("componentName"))
 
-        @inputText(
-        issueForm("componentVersion"),
-        '_label -> "Component version",
-        '_error -> issueForm.error("componentVersion"))
+    @inputText(
+    issueForm("componentVersion"),
+    'class -> "form-control",
+    '_label -> "Component version",
+    '_error -> issueForm.error("componentVersion"))
 
-        @inputText(
-        issueForm("assignee"),
-        '_label -> "Assignee",
-        '_error -> issueForm.error("assignee"))
+    @inputText(
+    issueForm("assignee"),
+    'class -> "form-control",
+    '_label -> "Assignee",
+    '_error -> issueForm.error("assignee"))
 
-        @inputText(
-        issueForm("comment"),
-        '_label -> "Comment",
-        '_help -> "An optional comment.",
-        '_error -> issueForm.error("comment"))
-
-    </fieldset>
+    @inputText(
+    issueForm("comment"),
+    'class -> "form-control",
+    '_label -> "Comment",
+    '_error -> issueForm.error("comment"))
 
     <div class="actions">
-        <input type="submit" class="btn primary" value="Submit">
-        <a href="@routes.Application.issues()" class="btn">Cancel</a>
+        <button type="button" class="btn btn-primary">Submit</button>
+        <a href="@routes.Application.issues()" class="btn btn-default">Cancel</a>
     </div>
 
     }
