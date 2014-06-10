@@ -3,7 +3,7 @@
 @import play.api.i18n._
 @import views.html.helper._
 
-<div class="form-group @elements.args.get('_class) @if(elements.hasErrors) {error}">
-    <label for="@elements.id">@elements.label(elements.lang)</label>
+<div class="form-group @elements.args.get('_class) @if(elements.hasErrors) {has-error}">
+    <label class="control-label" for="@elements.id">@elements.label(elements.lang)</label>
     @elements.input
 </div>
