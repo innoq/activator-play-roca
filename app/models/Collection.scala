@@ -1,7 +1,5 @@
 package models
 
-import _root_.java.lang.Math
-
 case class Collection[T](items: List[T], offset: Int, total: Long) {
 
   def hasNext = nextOffset < total
@@ -10,7 +8,7 @@ case class Collection[T](items: List[T], offset: Int, total: Long) {
 
   def nextOffset = offset + items.size
 
-  def displaying = {
+  def displaying =
     if (!items.isEmpty) {
       val from = offset + 1
       val to = from + items.size
@@ -18,5 +16,4 @@ case class Collection[T](items: List[T], offset: Int, total: Long) {
     } else {
       "Nothing to display."
     }
-  }
 }
