@@ -60,7 +60,9 @@ object Issue {
     }
     val total = DB.withConnection {
       implicit c =>
-        SQL("select count(*) from issue").as(scalar[Long].single)
+        SQL("select count(*) from issue where project_name like {projectName}")
+          .on("projectName" -> (s"%$projectName%"))
+          .as(scalar[Long].single)
     }
     Collection(issues, offset, total)
   }
