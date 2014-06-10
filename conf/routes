@@ -3,7 +3,7 @@
 # ~~~~
 
 GET     /                           controllers.Application.index()
-GET     /issues                     controllers.Application.issues(offset: Int ?= 0, count: Int ?= 10)
+GET     /issues                     controllers.Application.issues(offset: Int ?= 0, count: Int ?= 10, projectName: String ?= "")
 GET     /new_issue                  controllers.Application.newIssue()
 POST    /issues                     controllers.Application.submit()
 

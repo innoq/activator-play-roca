@@ -32,14 +32,14 @@ object Application extends Controller {
     Redirect(routes.Application.issues())
   }
 
-  def issues(offset: Int, count: Int) = Action {
-    val issues = Issue.load(offset, count)
+  def issues(offset: Int, count: Int, projectName: String) = Action {
+    val issues = Issue.load(offset, count, projectName)
 
     var links = Map[String, String]()
     if(issues.hasPrevious)
-      links += ("prev" -> routes.Application.issues(Math.max(0, offset-count), count).toString)
+      links += ("prev" -> routes.Application.issues(Math.max(0, offset-count), count, projectName).toString)
     if(issues.hasNext)
-      links += ("next" -> routes.Application.issues(issues.nextOffset, count).toString)
+      links += ("next" -> routes.Application.issues(issues.nextOffset, count, projectName).toString)
 
     Ok(views.html.issues(
       "List of " + issues.items.size + " issue(s) (total: " + issues.total + ")",
