@@ -42,7 +42,6 @@ object Application extends Controller {
       links += ("next" -> routes.Application.issues(issues.nextOffset, count, projectName).toString)
 
     Ok(views.html.issues(
-      "List of " + issues.items.size + " issue(s) (total: " + issues.total + ")",
       issues.items,
       links
     ))

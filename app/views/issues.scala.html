@@ -1,12 +1,8 @@
-@(message: String, issues: List[models.Issue], links: Map[String, String])
+@(issues: List[models.Issue], links: Map[String, String])
 
 @main("Issues", MenuContants.ALL_ISSUES) {
-    <div class="well">
-        <h1>@message</h1>
-    </div>
-}
 
-<div id="content" class="content">
+<div class="well">
     <table id="datatable" class="table table-striped" data-queryString="">
         <thead>
         <tr>
@@ -41,3 +37,5 @@
     </table>
     @pagination(links)
 </div>
+
+}

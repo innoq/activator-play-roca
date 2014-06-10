@@ -51,12 +51,11 @@ object Issue {
     }
   }
 
-  def load(offset: Int, count: Int, sqlInjection: String = "") = {
+  def load(offset: Int, count: Int, projectName: String = "") = {
     val issues = DB.withConnection {
       implicit c =>
-        // TODO named parameter didn't work with "like %{filter}%" or "like '%{filter}%'"
-        SQL(s"select * from issue where project_name like '%$sqlInjection%' limit {limit} offset {offset}")
-          .on("limit" -> count, "offset" -> offset)
+        SQL(s"select * from issue where project_name like {projectName} limit {limit} offset {offset}")
+          .on("limit" -> count, "offset" -> offset, "projectName" -> (s"%$projectName%"))
           .as(issueParser *)
     }
     val total = DB.withConnection {
