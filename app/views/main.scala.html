@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, constant: String = MenuContants.ALL_ISSUES)(content: Html)
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,13 +11,12 @@
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand">@title</a>
+                <a class="navbar-brand">IssueTracker</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="/issues">All issues</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li @if(constant == MenuContants.ALL_ISSUES) { class="active"}><a href="/issues">All Issues</a></li>
+                    <li @if(constant == MenuContants.NEW_ISSUE) { class="active"}><a href="/new_issue">Create Issue</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
