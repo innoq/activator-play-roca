@@ -8,7 +8,7 @@
 <div class="well">
     <h1>Issue</h1>
 
-    @helper.form(action = routes.Application.submit, 'role -> "form") {
+    @helper.form(action = routes.Application.submit(), 'role -> "form") {
 
     @inputText(
     issueForm("summary"),
