@@ -18,7 +18,7 @@
                     <li @if(constant == MenuContants.ALL_ISSUES) { class="active"}><a href="/issues">All Issues</a></li>
                     <li @if(constant == MenuContants.NEW_ISSUE) { class="active"}><a href="/new_issue">Create Issue</a></li>
                 </ul>
-                <form class="navbar-form navbar-left" role="search" action="@routes.Application.issues()">
+                <form class="navbar-form navbar-left" role="search" action="@routes.Issues.issues()">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Project" name="projectName">
                     </div>

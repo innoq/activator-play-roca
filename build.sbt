@@ -1,15 +1,26 @@
-name := """activator-play-roca"""
+import play.PlayScala
+import Build._
+import Dependencies._
 
-version := "1.0-SNAPSHOT"
+lazy val domain = rocaProject("domain")
+  .settings(
+    libraryDependencies ++= Seq(
+      jodaTime, jodaConvert
+    )
+  )
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val infra = rocaProject("infra")
+  .settings(
+    libraryDependencies ++= Seq(
+      anorm, jdbc
+    )
+  )
+  .dependsOn(domain)
 
-scalaVersion := "2.11.1"
-
-libraryDependencies ++= Seq(
-  "org.webjars" %% "webjars-play" % "2.3.0",
-  "org.webjars" % "bootstrap" % "3.1.1-1",
-  "joda-time" % "joda-time" % "2.3",
-  jdbc,
-  anorm
-)
+lazy val web = rocaProject("web").in(file("."))
+  .enablePlugins(PlayScala)
+  .settings(
+    libraryDependencies ++= Seq(
+      webJarsPlay, bootstrap, jodaTime, jodaConvert, anorm, jdbc))
+  .aggregate(domain, infra)
+  .dependsOn(domain, infra)
