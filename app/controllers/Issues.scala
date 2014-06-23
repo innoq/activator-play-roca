@@ -4,17 +4,13 @@ import play.api.mvc.{Action, Controller}
 import play.api.data._
 import play.api.data.Forms._
 import org.joda.time.DateTime
-import com.innoq.rocaplay.infra.issues.AnormIssueRepository
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.Future
 import com.innoq.rocaplay.domain.issues.Issue
 import helpers.Pagination
 
 object Issues extends Controller {
 
-  import play.api.Play.current
-  import ExecutionContext.Implicits.global
-
-  val issueRepository = new AnormIssueRepository()
+  import wiring.ApplicationConfig._
 
   case class IssueData(
     projectName: Option[String] = None,

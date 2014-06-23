@@ -7,6 +7,7 @@ object Build {
       name := s"activator-play-roca-$id",
       organization := "com.innoq",
       organizationName := "innoQ Deutschland GmbH",
-      scalaVersion := "2.11.1"
+      scalaVersion := "2.11.1",
+      scalacOptions ++= Seq("-feature", "-deprecation")
     )
 }

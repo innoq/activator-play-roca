@@ -1,11 +1,15 @@
 import com.innoq.rocaplay.domain.issues.Issue
 import org.joda.time.DateTime
 import play.api._
+import scala.concurrent.ExecutionContext
 import scala.util.Random
+import wiring.ApplicationConfig
 
-object Global extends GlobalSettings {
+trait Global extends GlobalSettings {
 
-  import ApplicationConfig._
+  protected def applicationConfig: ApplicationConfig
+  private def issueRepository = applicationConfig.issueRepository
+  implicit private def ec: ExecutionContext = applicationConfig.executionContext
 
   override def onStart(app: Application) {
     // Add new issues if less than 10 in the DB
@@ -22,5 +26,8 @@ object Global extends GlobalSettings {
     }
     Logger.info("Application has started")
   }
+}
 
+object Global extends Global {
+  override def applicationConfig = ApplicationConfig
 }

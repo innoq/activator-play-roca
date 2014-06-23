@@ -49,7 +49,7 @@ class AnormIssueRepository(implicit
       implicit c =>
         SQL(s"select * from issue where project_name like {projectName} limit {limit} offset {offset}")
           .on("limit" -> count, "offset" -> offset, "projectName" -> s"%$projectName%")
-          .as(issueParser *)
+          .as(issueParser.*)
     }
     val total = DB.withConnection {
       implicit c =>
