@@ -1,9 +1,10 @@
 @(issueForm: Form[Issues.IssueData])
+@import helpers.NavMenu
 
 @import helper._
 @import helpers.FormHelper._
 
-@main("Issue", MenuContants.NEW_ISSUE) {
+@main("Issue", NavMenu.NewIssue) {
 
 <div class="well">
     <h1>Issue</h1>

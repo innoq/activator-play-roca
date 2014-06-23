@@ -1,6 +1,8 @@
+@import helpers.NavMenu
+
 @(issues: List[com.innoq.rocaplay.domain.issues.Issue], links: Map[String, String])
 
-@main("Issues", MenuContants.ALL_ISSUES) {
+@main("Issues", NavMenu.AllIssues) {
 
 <div class="well">
     <table id="datatable" class="table table-striped" data-queryString="">
