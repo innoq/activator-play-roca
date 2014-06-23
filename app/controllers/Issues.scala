@@ -7,6 +7,7 @@ import org.joda.time.DateTime
 import com.innoq.rocaplay.infra.issues.AnormIssueRepository
 import scala.concurrent.{Future, ExecutionContext}
 import com.innoq.rocaplay.domain.issues.Issue
+import helpers.Pagination
 
 object Issues extends Controller {
 
@@ -67,18 +68,8 @@ object Issues extends Controller {
   def issues(offset: Int, count: Int, projectName: String) = Action.async {
     val issuesF = issueRepository.findByProjectName(projectName, offset, count)
     issuesF map { issues =>
-      var links = Map[String, String]()
-      if(issues.hasPrevious)
-        links += ("prev" -> routes.Issues.issues(Math.max(0, offset-count), count, projectName).toString)
-      if(issues.hasNext)
-        links += ("next" -> routes.Issues.issues(issues.nextOffset, count, projectName).toString)
-
-      Ok(views.html.issues(
-        issues.items,
-        links
-      ))
+      Ok(views.html.issues(issues.items, Pagination.Navigation(issues, count, projectName)))
     }
-
   }
 
   def newIssue = Action {

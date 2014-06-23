@@ -1,15 +1,17 @@
-@(links: Map[String, String])
+@(pagination: helpers.Pagination.Navigation)
 <div>
     <ul class="pager">
-        @if(links.get("prev").isDefined) {
-            <li class="previous"><a href="@links.get("prev").get ">&larr; Prev</a></li>
-        } else {
-            <li class="previous disabled"><a>&larr; Prev</a></li>
+        @paginationLink(link: Option[Call], clazz: String, text: String) = {
+            @link match {
+                case Some(l) => {
+                    <li class="@clazz"><a href="@l">@play.twirl.api.Html(text)</a></li>
+                }
+                case None => {
+                    <li class="@clazz disabled"><a>@play.twirl.api.Html(text)</a></li>
+                }
+            }
         }
-        @if(links.get("next").isDefined) {
-            <li class="next"><a href="@links.get("next").get ">Next &rarr;</a></li>
-        } else {
-            <li class="next disabled"><a>Next &rarr;</a></li>
-        }
+        @paginationLink(pagination.prev, "previous", "&larr; Prev")
+        @paginationLink(pagination.next, "next", "Next &rarr;")
     </ul>
 </div>

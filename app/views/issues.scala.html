@@ -1,6 +1,7 @@
 @import helpers.NavMenu
+@import helpers.Pagination
 
-@(issues: List[com.innoq.rocaplay.domain.issues.Issue], links: Map[String, String])
+@(issues: Seq[com.innoq.rocaplay.domain.issues.Issue], paginationNav: Pagination.Navigation)
 
 @main("Issues", NavMenu.AllIssues) {
 
@@ -37,7 +38,7 @@
         }
         </tbody>
     </table>
-    @pagination(links)
+    @pagination(paginationNav)
 </div>
 
 }
