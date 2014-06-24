@@ -1,6 +1,6 @@
 @(elements: views.html.helper.FieldElements)
 
-<div class="form-group @elements.args.get('_class) @if(elements.hasErrors) {has-error}">
+<div class="form-group@elements.args.getOrElse('_class, "") @if(elements.hasErrors) {has-error}">
     <label class="control-label" for="@elements.id">@elements.label(elements.lang)</label>
     @elements.input
 </div>

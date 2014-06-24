@@ -6,15 +6,15 @@
 <div class="well">
     <h1>Issue</h1>
 
-    @helper.form(action = routes.Issues.submit(), 'role -> "form") {
+    @helper.form(action = routes.Issues.submit(), 'role -> "form", 'novalidate -> "novalidate") {
 
-    @inputText(
+    @validatingInputText(
     issueForm("summary"),
     'class -> "form-control",
     '_label -> "Summary*",
     '_error -> issueForm.error("summary"))
 
-    @inputText(
+    @validatingInputText(
     issueForm("reporter"),
     'class -> "form-control",
     '_label -> "Reporter*",

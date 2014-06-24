@@ -1,0 +1,9 @@
+@(field: Field, args: (Symbol, Any)*)(implicit ctr: helper.FieldConstructor, lang: Lang)
+
+@required(field: Field) = {
+    @if(field.constraints.exists(_._1 == "constraint.required")){required}
+}
+
+@helper.input.f(field, args.toArray) { (id, name, value, args) =>
+    <input type="text" id="@id" name="@name" @toHtmlArgs(args) @required(field)>
+}(ctr, lang)
