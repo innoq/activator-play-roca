@@ -1,0 +1,10 @@
+@import helpers.NavMenu
+@import helpers.Pagination
+
+@(issues: Seq[com.innoq.rocaplay.domain.issues.Issue],
+        paginationNav: Pagination.Navigation,
+        projectName: String = "")
+
+@main("Issues", NavMenu.AllIssues, projectName) {
+@views.html.issues(issues, paginationNav, projectName)
+}

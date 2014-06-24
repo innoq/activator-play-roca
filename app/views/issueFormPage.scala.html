@@ -1,0 +1,6 @@
+@(issueForm: Form[Issues.IssueData])
+@import helpers.NavMenu
+
+@main("Issue", NavMenu.NewIssue) {
+    @views.html.issueForm(issueForm)
+}

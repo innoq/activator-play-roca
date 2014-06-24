@@ -6,9 +6,9 @@ import play.api.data.Forms._
 import org.joda.time.DateTime
 import scala.concurrent.Future
 import com.innoq.rocaplay.domain.issues.Issue
-import helpers.Pagination
+import helpers.{ConditionalLayout, Pagination}
 
-object Issues extends Controller {
+object Issues extends Controller with ConditionalLayout {
 
   import wiring.ApplicationConfig._
 
@@ -63,10 +63,12 @@ object Issues extends Controller {
     Redirect(routes.Issues.issues())
   }
 
-  def issues(offset: Int, count: Int, projectName: String) = Action.async {
+  def issues(offset: Int, count: Int, projectName: String) = ConditionalLayoutAction.async { req =>
     val issuesF = issueRepository.findByProjectName(projectName, offset, count)
     issuesF map { issues =>
-      Ok(views.html.issues(
+      val view =
+        if (req.requiresLayout) views.html.issuesPage.render _ else views.html.issues.render _
+      Ok(view(
         issues.items,
         Pagination.Navigation(issues, count, projectName),
         projectName))
@@ -74,13 +76,14 @@ object Issues extends Controller {
   }
 
   def newIssue = Action {
-    Ok(views.html.issueForm(issueForm.fill(IssueData(summary = "", reporter = "You", openDate = new DateTime))))
+    Ok(views.html.issueFormPage(issueForm.fill(IssueData(summary = "", reporter = "You", openDate = new DateTime))))
   }
 
   def submit = Action.async { implicit request =>
     issueForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.html.issueForm(errors))),
+      errors => Future.successful(BadRequest(views.html.issueFormPage(errors))),
       issueData => issueRepository.save(IssueData toNewIssue issueData) map (_ => Redirect(routes.Issues.issues()))
       )
   }
+
 }
