@@ -1,11 +1,12 @@
 package com.innoq.rocaplay.domain
 
 import org.joda.time.DateTime
+import java.util.UUID
 
 package object issues {
 
   case class Issue(
-    id: Long,
+    id: String,
     projectName: Option[String],
     priority: Option[String],
     issueType: Option[String],
@@ -39,7 +40,7 @@ package object issues {
       closeAction: Option[String],
       assignee: Option[String],
       comment: Option[String]): Issue = Issue(
-        System.currentTimeMillis(), projectName, priority, issueType, summary, exceptionStackTrace,
+        UUID.randomUUID().toString, projectName, priority, issueType, summary, exceptionStackTrace,
         description, reporter, componentName, componentVersion, processingState, openDate,
         closeDate, closeAction, assignee, comment
     )

@@ -12,9 +12,12 @@ import com.innoq.rocaplay.domain.issues.Issue
 import org.joda.time.DateTime
 import play.api.Application
 
-class AnormIssueRepository(implicit
+class AnormIssueRepository(
     application: Application,
     executionContext: ExecutionContext) extends IssueRepository {
+
+  private implicit val app = application
+  private implicit val ec = executionContext
 
   override def save(issue: Issue) = Future {
     DB.withConnection {
@@ -64,7 +67,7 @@ class AnormIssueRepository(implicit
   override def findAll(offset: Int, count: Int): Future[Page[Issue]] = findByProjectName("", offset, count)
 
   private val issueParser: RowParser[Issue] = {
-    get[Pk[Long]]("id") ~
+    get[String]("id") ~
       get[Option[String]]("project_name") ~
       get[Option[String]]("priority") ~
       get[Option[String]]("issue_type") ~
@@ -82,7 +85,7 @@ class AnormIssueRepository(implicit
       get[Option[String]]("comment") map {
       case id ~ projectName ~ priority ~ issueType ~ summary ~ exceptionStackTrace ~ description ~ reporter ~
         componentName ~ componentVersion ~ processingState ~ openDate ~ closeDate ~ closeAction ~ assignee ~ comment =>
-        Issue(id.get, projectName, priority, issueType, summary, exceptionStackTrace,
+        Issue(id, projectName, priority, issueType, summary, exceptionStackTrace,
           description, reporter, componentName, componentVersion, processingState,
           new DateTime(openDate), closeDate.map(new DateTime(_)), closeAction, assignee, comment)
     }

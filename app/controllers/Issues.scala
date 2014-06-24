@@ -12,6 +12,8 @@ object Issues extends Controller {
 
   import wiring.ApplicationConfig._
 
+  implicit val ec = issuesDbExecutionContext
+
   case class IssueData(
     projectName: Option[String] = None,
     priority: Option[String] = None,
@@ -64,7 +66,10 @@ object Issues extends Controller {
   def issues(offset: Int, count: Int, projectName: String) = Action.async {
     val issuesF = issueRepository.findByProjectName(projectName, offset, count)
     issuesF map { issues =>
-      Ok(views.html.issues(issues.items, Pagination.Navigation(issues, count, projectName)))
+      Ok(views.html.issues(
+        issues.items,
+        Pagination.Navigation(issues, count, projectName),
+        projectName))
     }
   }
 

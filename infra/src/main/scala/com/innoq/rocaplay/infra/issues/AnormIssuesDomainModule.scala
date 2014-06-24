@@ -8,7 +8,8 @@ import scala.concurrent.ExecutionContext
 trait AnormIssuesDomainModule extends IssuesDomainModule {
 
   implicit def currentApplication: Application
-  implicit def executionContext: ExecutionContext
+  def issuesDbExecutionContext: ExecutionContext
 
-  override def issueRepository: IssueRepository = new AnormIssueRepository()
+  override def issueRepository: IssueRepository =
+    new AnormIssueRepository(currentApplication, issuesDbExecutionContext)
 }
