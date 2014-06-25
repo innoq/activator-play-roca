@@ -36,5 +36,51 @@
     makes use of this to render a different view, depending on whether a layout is required
     or not.</p>
 </div>
+<div>
+    <h2>Application logic</h2>
+    <p>
+        Another core principle of ROCA applications is that
+        <a href="http://roca-style.org/#application-logic">all application logic resides on
+        the server</a>.
+    </p>
+    <p>
+        This not only due to the fact that the application should be usable
+        without JavaScript, but also, and more importantly, because ultimately, only the server
+        has the authority to validate the users' input and interactions – they cannot and must not
+        rely on the client having done some or all of the necessary checks and validations.
+    </p>
+    <p>
+        In order to improve the user experience and usability, it is often necessary to to perform
+        some validations already in the browser, if JavaScript is working. However, these must never replace validations
+        performed by the server, and the
+        <a href="http://roca-style.org/#no-duplication">corresponding logic must not be duplicated</a>.
+    </p>
+    <p>
+        Instead, the server can provide information about the respective constraints
+        in a declarative way that can be processed in the browser without knowledge of the
+        specific application logic.
+    </p>
+    <p>
+        This can be done by means of custom data attributes in the HTML markup that can then be processed
+        by a generic JavaScript validation library. Alternatively, the information could be supplied using the HTML5
+        attributes for specifying validation constraints on form elements and then evaluated by means of the HTML5
+        constraint validation JavaScript API.
+    </p>
+    <p>
+        You can see this principle applied in the
+        <a href="#code/app/views/issueForm.scala.html" class="shortcut">issue form</a> for submitting a new
+        issue. Here, instead of calling the default template for creating an input text element,
+        we make use of our own custom helper template, the
+        <a href="#code/app/views/issueForm.scala.html" class="shortcut">validatingInputText</a>.
+    </p>
+    <p>
+        This serves as an oversimplified demonstration of how to attach additional constraint
+        attributes to an input element in Play, based on the constraints specified in the mapping for the
+        respective field using Play's Form API. In this case, the form mapping that serves as the
+        source for the constraint attributes on the input elements is the <code>issueForm</code>
+        defined in the
+        <a href="#code/app/controllers/Issues.scala" class="shortcut">Issues controller</a>.
+    </p>
+</div>
 </body>
 </html>
