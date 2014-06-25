@@ -8,6 +8,7 @@ object Build {
       organization := "com.innoq",
       organizationName := "innoQ Deutschland GmbH",
       scalaVersion := "2.11.1",
-      scalacOptions ++= Seq("-feature", "-deprecation")
+      scalacOptions ++= Seq("-feature", "-deprecation"),
+      resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases"
     )
 }

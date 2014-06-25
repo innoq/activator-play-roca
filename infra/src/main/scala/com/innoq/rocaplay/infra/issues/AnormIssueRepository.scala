@@ -20,56 +20,45 @@ class AnormIssueRepository(
   private implicit val ec = executionContext
 
   override def save(issue: Issue) = Future {
-    DB.withConnection {
+    val result = DB.withConnection {
       implicit connection =>
-        SQL( """
+        SQL"""
             insert into issue(id, project_name, priority, issue_type, summary, exception_stack_trace, description,
-            reporter, component_name, component_version, processing_state, open_date, close_date, close_action, assignee, comment)
-            values({id}, {projectName}, {priority}, {issueType}, {summary}, {exceptionStackTrace}, {description},
-            {reporter}, {componentName}, {componentVersion}, {processingState}, {openDate}, {closeDate}, {closeAction}, {assignee}, {comment})
-             """).on(
-            'id -> issue.id,
-            'projectName -> issue.projectName,
-            'priority -> issue.priority,
-            'issueType -> issue.issueType,
-            'summary -> issue.summary,
-            'exceptionStackTrace -> issue.exceptionStackTrace,
-            'description -> issue.description,
-            'reporter -> issue.reporter,
-            'componentName -> issue.componentName,
-            'componentVersion -> issue.componentVersion,
-            'processingState -> issue.processingState,
-            'openDate -> issue.openDate.getMillis,
-            'closeDate -> issue.closeDate.map(_.getMillis),
-            'closeAction -> issue.closeAction,
-            'assignee -> issue.assignee,
-            'comment -> issue.comment).executeUpdate
+            reporter, component_name, component_version, processing_state, open_date, close_date, close_action,
+            assignee, comment) values(${issue.id}, ${issue.projectName}, ${issue.priority}, ${issue.issueType},
+            ${issue.summary}, ${issue.exceptionStackTrace}, ${issue.description},
+            ${issue.reporter}, ${issue.componentName}, ${issue.componentVersion}, ${issue.processingState},
+            ${issue.openDate.getMillis}, ${issue.closeDate.map(_.getMillis)}, ${issue.closeAction}, ${issue.assignee}, ${issue.comment})
+             """.executeUpdate()
     }
   }
 
   override def findByProjectName(projectName: String, offset: Int, count: Int) = Future {
     val issues = DB.withConnection {
       implicit c =>
-        SQL(s"select * from issue where project_name like {projectName} limit {limit} offset {offset}")
-          .on("limit" -> count, "offset" -> offset, "projectName" -> s"%$projectName%")
+        SQL("select * from issue where project_name like {projectName} limit {count} offset {offset}")
+          .on(
+            'projectName -> s"%$projectName%",
+            'count -> count,
+            'offset -> offset
+          )
           .as(issueParser.*)
     }
     val total = DB.withConnection {
       implicit c =>
         SQL("select count(*) from issue where project_name like {projectName}")
-          .on("projectName" -> s"%$projectName%")
+          .on('projectName -> s"%$projectName%")
           .as(scalar[Long].single)
     }
     Page(issues, offset, total)
   }
-
 
   override def findAll(offset: Int, count: Int): Future[Page[Issue]] = findByProjectName("", offset, count)
 
   override def findById(issueId: String): Future[Option[Issue]] = Future {
     DB.withConnection {
       implicit c =>
-        SQL("select * from issue where id = {issueId}").on("issueId" -> issueId).as(issueParser.singleOpt)
+        SQL"select * from issue where id = $issueId".as(issueParser.singleOpt)
     }
   }
 
