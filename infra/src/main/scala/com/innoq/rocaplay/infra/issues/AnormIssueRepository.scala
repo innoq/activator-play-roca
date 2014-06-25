@@ -20,7 +20,7 @@ class AnormIssueRepository(
   private implicit val ec = executionContext
 
   override def save(issue: Issue) = Future {
-    val result = DB.withConnection {
+    DB.withConnection {
       implicit connection =>
         SQL"""
             insert into issue(id, project_name, priority, issue_type, summary, exception_stack_trace, description,
@@ -35,18 +35,20 @@ class AnormIssueRepository(
 
   override def findByProjectName(projectName: String, offset: Int, count: Int) = Future {
      DB.withConnection {
-      implicit c =>
-        val issues = SQL("select * from issue where project_name like {projectName} limit {count} offset {offset}")
+      implicit c => {
+        val where = if (projectName.isEmpty) "" else "where project_name like {projectName}"
+        val query = SQL("select * from issue " + where + " limit {count} offset {offset}")
           .on(
             'projectName -> s"%$projectName%",
             'count -> count,
             'offset -> offset
           )
-          .as(issueParser.*)
-        val total = SQL("select count(*) from issue where project_name like {projectName}")
+        val issues = query.as(issueParser.*)
+        val total = SQL("select count(*) from issue " + where)
           .on('projectName -> s"%$projectName%")
           .as(scalar[Long].single)
         Page(issues, offset, total)
+      }
      }
   }
 
