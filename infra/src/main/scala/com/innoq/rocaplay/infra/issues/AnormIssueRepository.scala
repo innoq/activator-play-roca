@@ -34,23 +34,20 @@ class AnormIssueRepository(
   }
 
   override def findByProjectName(projectName: String, offset: Int, count: Int) = Future {
-    val issues = DB.withConnection {
+     DB.withConnection {
       implicit c =>
-        SQL("select * from issue where project_name like {projectName} limit {count} offset {offset}")
+        val issues = SQL("select * from issue where project_name like {projectName} limit {count} offset {offset}")
           .on(
             'projectName -> s"%$projectName%",
             'count -> count,
             'offset -> offset
           )
           .as(issueParser.*)
-    }
-    val total = DB.withConnection {
-      implicit c =>
-        SQL("select count(*) from issue where project_name like {projectName}")
+        val total = SQL("select count(*) from issue where project_name like {projectName}")
           .on('projectName -> s"%$projectName%")
           .as(scalar[Long].single)
-    }
-    Page(issues, offset, total)
+        Page(issues, offset, total)
+     }
   }
 
   override def findAll(offset: Int, count: Int): Future[Page[Issue]] = findByProjectName("", offset, count)
