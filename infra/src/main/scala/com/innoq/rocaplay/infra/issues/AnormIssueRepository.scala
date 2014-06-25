@@ -66,6 +66,13 @@ class AnormIssueRepository(
 
   override def findAll(offset: Int, count: Int): Future[Page[Issue]] = findByProjectName("", offset, count)
 
+  override def findById(issueId: String): Future[Option[Issue]] = Future {
+    DB.withConnection {
+      implicit c =>
+        SQL("select * from issue where id = {issueId}").on("issueId" -> issueId).as(issueParser.singleOpt)
+    }
+  }
+
   private val issueParser: RowParser[Issue] = {
     get[String]("id") ~
       get[Option[String]]("project_name") ~
