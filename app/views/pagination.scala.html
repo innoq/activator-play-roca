@@ -1,13 +1,13 @@
 @(pagination: helpers.Pagination.Navigation)
 <div>
     <ul class="pager">
-        @paginationLink(link: Option[Call], clazz: String, text: String) = {
+        @paginationLink(link: Option[Call], rel: String, text: String) = {
             @link match {
                 case Some(l) => {
-                    <li class="@clazz"><a href="@l">@play.twirl.api.Html(text)</a></li>
+                    <li class="@rel"><a rel="@rel" href="@l">@play.twirl.api.Html(text)</a></li>
                 }
                 case None => {
-                    <li class="@clazz disabled"><a>@play.twirl.api.Html(text)</a></li>
+                    <li class="@rel disabled"><a>@play.twirl.api.Html(text)</a></li>
                 }
             }
         }
