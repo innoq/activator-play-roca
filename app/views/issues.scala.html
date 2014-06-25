@@ -1,4 +1,5 @@
 @import helpers.Pagination
+@import helpers.DateTimeFormatting.shortDateTime
 
 @(issues: Seq[com.innoq.rocaplay.domain.issues.Issue],
         paginationNav: Pagination.Navigation, projectName: String = "")
@@ -30,8 +31,8 @@
             <td>@i.componentName</td>
             <td>@i.reporter</td>
             <td>@i.assignee</td>
-            <td>@i.openDate</td>
-            <td>@i.closeDate</td>
+            <td>@shortDateTime(i.openDate)</td>
+            <td>@i.closeDate.map(shortDateTime _)</td>
         </tr>
         }
         </tbody>
