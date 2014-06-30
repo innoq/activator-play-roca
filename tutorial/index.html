@@ -13,6 +13,40 @@
     ROCA principles and describes how it is applied in the example application.</p>
 </div>
 <div>
+    <h2>REST</h2>
+    <p>
+        ROCA applications <a href="http://roca-style.org/#rest">adhere to the principles of REST</a>,
+        which means that they expose one or more resources whose state is solely maintained by
+        the server, allowing for stateless communication.
+    </p>
+    <p>
+        Each resource has its own URI, which means that it can be bookmarked and linked to from
+        other resources.
+    </p>
+    <p>
+        When providing representations of resources, the server should leverage the ability to link
+        to other resources to inform the user about meaningful next possible steps.
+    </p>
+    <p>
+        For instance, in our example application we have a collection resource of all the issues
+        created by users. This collection is
+        <a href="#code/app/views/pagination.scala.html" class="shortcut">paginated</a>, and the
+        HTML representation of an issues page contains a link to the previous page, if there is
+        one, and to the next page, again if another page exists.
+    </p>
+    <p>The semantics of these links are also machine-readable, because they
+        are annotated with the IANA-standardised and hence well-understood
+        <code>previous</code> and <code>next</code> link relations, respectively.</p>
+</div>
+<div>
+    <h2>Should formats</h2>
+    <p>
+        In ROCA applications, the primary format for providing representations of resources is HTML.
+        However, representations in other formats like JSON or XML may be provided, primarily for
+        consumption by other applications, not for consumption by JavaScript running in the browser.
+    </p>
+</div>
+<div>
     <h2>Unobtrusive JavaScript</h2>
     <p>ROCA applications <a href="http://roca-style.org/#unobtrusive-javascript">use JavaScript unobtrusively</a> and
     remain usable when JavaScript is disabled or just doesn't happen to work. You can see this principle applied on
