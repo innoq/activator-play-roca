@@ -1,7 +1,7 @@
 require.config({
 	paths: {
-		jquery: "bower_components/jquery/dist/jquery",
-		pjax: "bower_components/jquery-pjax/jquery.pjax"
+		jquery: "/assets/jquery/dist/jquery",
+		pjax: "/assets/jquery-pjax/jquery.pjax"
 	},
 	shim: {
 		pjax: {
