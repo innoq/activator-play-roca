@@ -1,0 +1,6 @@
+{
+  "name": "activator-play-roca",
+  "dependencies": {
+    "jquery-pjax": ">= 1.9.2"
+  }
+}
