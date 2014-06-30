@@ -11,5 +11,9 @@ require.config({
 });
 
 require(["jquery", "pjax"], function($) {
-	$(document.body).pjax("a", "#contents");
+	var selector = "#contents";
+	$(document.body).pjax("a", selector);
+	$(document).on("submit", "form[role=search]", function(ev) {
+		$.pjax.submit(ev, selector)
+	})
 });
