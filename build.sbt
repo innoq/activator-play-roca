@@ -18,9 +18,10 @@ lazy val infra = rocaProject("infra")
   .dependsOn(domain)
 
 lazy val web = rocaProject("web").in(file("."))
-  .enablePlugins(PlayScala)
+  .enablePlugins(PlayScala, SbtWeb)
   .settings(
     libraryDependencies ++= Seq(
-      webJarsPlay, bootstrap, jodaTime, jodaConvert, anorm, jdbc))
+      webJarsPlay, bootstrap, jodaTime, jodaConvert, anorm, jdbc),
+    pipelineStages := Seq(rjs))
   .aggregate(domain, infra)
   .dependsOn(domain, infra)
