@@ -1,12 +1,14 @@
 package controllers
 
-import play.api.mvc.{Action, Controller}
-import play.api.data._
-import play.api.data.Forms._
-import org.joda.time.DateTime
-import scala.concurrent.Future
 import com.innoq.rocaplay.domain.issues.Issue
-import helpers.{ConditionalLayout, Pagination}
+import helpers.{Pagination, ConditionalLayout, HalFormat}
+import HalFormat._
+import org.joda.time.DateTime
+import play.api.data.Forms._
+import play.api.data._
+import play.api.mvc.{Action, Controller}
+
+import scala.concurrent.Future
 
 object Issues extends Controller with ConditionalLayout {
 
@@ -63,15 +65,21 @@ object Issues extends Controller with ConditionalLayout {
     Redirect(routes.Issues.issues())
   }
 
-  def issues(offset: Int, count: Int, projectName: String) = ConditionalLayoutAction.async { req =>
+  def issues(offset: Int, count: Int, projectName: String) = ConditionalLayoutAction.async { implicit req =>
     val issuesF = issueRepository.findByProjectName(projectName, offset, count)
     issuesF map { issues =>
-      val view =
-        if (req.requiresLayout) views.html.issuesPage.render _ else views.html.issues.render _
-      Ok(view(
-        issues.items,
-        Pagination.Navigation(issues, count, projectName),
-        projectName))
+      render {
+        case Accepts.Html() =>
+          val view =
+            if (req.requiresLayout) views.html.issuesPage.render _ else views.html.issues.render _
+          Ok(view(
+            issues.items,
+            Pagination.Navigation(issues, count, projectName),
+            projectName))
+        case HalFormat.accept() =>
+          val halJson = HalFormat.issuesToHal(issues, count, projectName)
+          Ok(halJson)
+      }
     }
   }
 

@@ -24,4 +24,4 @@ lazy val web = rocaProject("web").in(file("."))
       webJarsPlay, bootstrap, jodaTime, jodaConvert, anorm, jdbc),
     pipelineStages := Seq(rjs))
   .aggregate(domain, infra)
-  .dependsOn(domain, infra)
+  .dependsOn(domain, infra, halselhof)
