@@ -44,6 +44,14 @@ object Issues extends Controller with ConditionalLayout with JsonRequests {
       issueData.description, issueData.reporter, issueData.componentName, issueData.componentVersion,
       issueData.processingState, issueData.openDate, issueData.closeDate, issueData.closeAction,
       issueData.assignee, issueData.comment)
+
+
+    def toIssueData(issues: Issue): IssueData = {
+      IssueData(issues.projectName, issues.priority, issues.issueType, issues.summary, issues.exceptionStackTrace,
+      issues.description, issues.reporter, issues.componentName, issues.componentVersion,
+      issues.processingState, issues.openDate, issues.closeDate, issues.closeAction,
+      issues.assignee, issues.comment)
+    }
   }
   
   val issueForm = Form(
@@ -90,10 +98,16 @@ object Issues extends Controller with ConditionalLayout with JsonRequests {
     }
   }
 
-  def load(id: String) = Action.async {
-    val issue = issueRepository.findById(id)
-    issue map { issue =>
-      issue.fold(NotFound(""))(i => Ok(HalFormat.issueToHal(i)))
+  def load(id: String) = Action.async { implicit request =>
+    issueRepository.findById(id).map { issue =>
+      issue.map { issue =>
+        render {
+          case Accepts.Html() =>
+           Ok(views.html.issueFormPage(issueForm.fill(IssueData toIssueData issue)))
+          case HalFormat.accept() =>
+           Ok(HalFormat.issueToHal(issue))
+        }
+      }.getOrElse(NotFound)
     }
   }
 

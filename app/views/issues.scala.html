@@ -23,7 +23,7 @@
         <tbody data-provides="rowlink" data-target="a.rowlink">
         @for(i <- issues) {
         <tr data-issueId="@i.id">
-            <td class="nolink">@i.id</td>
+            <td><a href="@routes.Issues.load(i.id)">@i.id</a></td>
             <td>@i.issueType</td>
             <td>@i.summary</td>
             <td>@i.priority</td>
