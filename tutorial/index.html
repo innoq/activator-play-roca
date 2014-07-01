@@ -20,12 +20,13 @@
         the server, allowing for stateless communication.
     </p>
     <p>
-        Each resource has its own URI, which means that it can be bookmarked and linked to from
-        other resources.
+        Each resource has its own URI, which means that it can be bookmarked by users and linked to
+        from other resources.
     </p>
     <p>
         When providing representations of resources, the server should leverage the ability to link
-        to other resources to inform the user about meaningful next possible steps.
+        to other resources to inform the user about meaningful navigation paths from the currently
+        viewed resource.
     </p>
     <p>
         For instance, in our example application we have a collection resource of all the issues
@@ -41,9 +42,62 @@
 <div>
     <h2>Should formats</h2>
     <p>
-        In ROCA applications, the primary format for providing representations of resources is HTML.
-        However, representations in other formats like JSON or XML may be provided, primarily for
-        consumption by other applications, not for consumption by JavaScript running in the browser.
+        In ROCA applications, the primary format for providing representations of resources is
+        <a href="http://roca-style.org/#posh">Plain Old Semantic HTML</a>.
+    </p>
+    <p>
+        However, representations in other formats like JSON or XML
+        <a href="http://roca-style.org/#should-formats">may be provided</a>,
+        primarily for consumption by other applications, not for consumption by JavaScript
+        running in the browser.
+    </p>
+    <p>
+        These alternative representations should provide the same hyperlinks as the HTML
+        representations, provided in a standardised, well-understood format. In our example,
+        for the issues collection resource, we make use of
+        <a href="http://tools.ietf.org/html/draft-kelly-json-hal-06">HAL</a>, the
+        JSON Hypertext Application Language, to provide the same meaningful pagination links
+        as in the HTML representation.
+    </p>
+    <p>
+        To determine the content type in which a representation of a resource is to be
+        returned in the response, we can perform server-driven content negotation,
+        based on <code>Accept</code> headers provided in the request.
+    </p>
+    <p>
+        An example of how to do this in Play can be found in the <code>issues</code> action
+        of the
+        <a href="#code/app/controllers/Issues.scala" class="shortcut">Issues</a> controller.
+    </p>
+    <p>
+        Here, we make use of Play's <code>render</code> method, which we need to pass a
+        <code>PartialFunction[MediaRange, Result</code>.
+    </p>
+    <p>
+        For our first case in that partial function, we make use of one Play's predefined request
+        extractor, <code>Accepts.Html</code>, and if HTML is accepted we respond with
+        an appropriate HTML representation.
+    </p>
+    <p>
+        In the second case, we use a custom request extractor,
+        <a href="#code/app/helpers/HalFormat.scala" class="shortcut">HalFormat.accept</a>
+        that checks if <code>HAL+JSON</code>, is accepted:
+        <pre><code>val accept = Accepting("application/hal+json")</code></pre>
+    </p>
+    <p>
+        If <code>HAL+JSON</code> is accepted, we respond with an appropriate instance
+        of <code>HalResource</code>, provided by the <code>issuesToHal</code> method:
+        <pre><code>render {
+  case HalFormat.accept() =>
+    val halJson = HalFormat.issuesToHal(issues, count, projectName)
+    Ok(halJson)
+}</code></pre>
+    </p>
+    <p>
+        In order to be able to respond with instances of <code>HalResource</code>,
+        we also need to provide an implicit <code>Writable[HalResource]</code>:
+        <pre><code>implicit def halWriter(implicit code: Codec): Writeable[HalResource] =
+    Writeable(d => code.encode(Json.toJson(d).toString()), Some("application/hal+json"))</code></pre>
     </p>
 </div>
 <div>
