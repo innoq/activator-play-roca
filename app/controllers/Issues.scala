@@ -1,5 +1,6 @@
 package controllers
 
+import play.api.i18n.Messages.Message
 import play.api.mvc.{Action, Controller}
 import play.api.data._
 import play.api.data.Forms._

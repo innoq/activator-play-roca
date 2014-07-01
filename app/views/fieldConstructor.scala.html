@@ -1,6 +1,11 @@
 @(elements: views.html.helper.FieldElements)
 
-<div class="form-group@elements.args.getOrElse('_class, "") @if(elements.hasErrors) {has-error}">
+<div class="form-group@elements.args.getOrElse('_class, "")">
     <label class="control-label" for="@elements.id">@elements.label(elements.lang)</label>
     @elements.input
+    <p class="error alert alert-danger @if(!elements.hasErrors){hidden}" aria-role="alert">
+        @if(elements.hasErrors) {
+            @elements.errors.mkString(", ")
+        }
+    </p>
 </div>
