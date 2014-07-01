@@ -102,27 +102,46 @@
 </div>
 <div>
     <h2>Unobtrusive JavaScript</h2>
-    <p>ROCA applications <a href="http://roca-style.org/#unobtrusive-javascript">use JavaScript unobtrusively</a> and
+    <p>
+        ROCA applications <a href="http://roca-style.org/#unobtrusive-javascript">use JavaScript unobtrusively</a> and
     remain usable when JavaScript is disabled or just doesn't happen to work. You can see this principle applied on
-    the list of issues in the example application.</p>
-    <p>When browsing through the list of issues without using JavaScript,
-    the entire DOM is refreshed when viewing the next page or filtering for a specific project. If, on the other hand,
-    JavaScript is available, only the part of the DOM that has actually changed (the list of issues) is updated.</p>
-    <p>Hence, JavaScript is used solely to enhance the user experience, but the functionality (filtering, pagination etc.)
-        remains usable if JavaScript doesn't work.</p>
-    <p>There is not a lot you need to do in your server-side Play code in order to support this principle.
-    All you need to do is serve both full HTML representations of your resources (i.e. the HTML
-        includes the surrounding layout) and partial HTML without the surrounding layout.</p>
-    <p>The former needs to be served in case of a full page load. If JavaScript is working,
-    however, the client can make use of PJAX, updating the DOM with the partial HTML and <a href="http://roca-style.org/#historyapi">using
-    the HTML5 History API</a> to update the browser's current URL.</p>
-    <p>We make use of a <a href="#code/app/helpers/ConditionalLayout.scala" class="shortcut">custom Play action builder</a>
+    the list of issues in the example application.
+    </p>
+    <p>
+        When browsing through the list of issues without using JavaScript,
+        the entire DOM is refreshed when viewing the next page or filtering for a specific
+        project. If, on the other hand, JavaScript is available, only the part of the DOM that
+        has actually changed (the list of issues) is updated.
+    </p>
+    <p>
+        Hence, JavaScript is used solely to enhance the user experience, but the functionality
+        (filtering, pagination etc.) remains usable if JavaScript doesn't work.
+    </p>
+    <p>
+        There is not a lot you need to do in your server-side Play code in order to support this
+        principle. All you need to do is serve both full HTML representations of your resources
+        (i.e. the HTML includes the surrounding layout) and partial HTML without the surrounding
+        layout.
+    </p>
+    <p>
+        The former needs to be served in case of a full page load. If JavaScript is working,
+        however, the client can
+        <a href="#code/app/assets/javascripts/main.js" class="shortcut">make use of PJAX</a>,
+        updating the DOM with the partial HTML and
+        <a href="http://roca-style.org/#historyapi">using the HTML5 History API</a> to update the
+        browser's current URL.
+    </p>
+    <p>
+        We make use of a <a href="#code/app/helpers/ConditionalLayout.scala" class="shortcut">custom Play action builder</a>
         in order to provide an enriched request to our controller that holds information on whether
     a full layout is required or not. This is determined based on the presence and value of the
-    <code>X-PJAX</code> HTTP request header.</p>
-    <p>The <a href="#code/app/controllers/Issues.scala" class="shortcut">Issues controller</a>
-    makes use of this to render a different view, depending on whether a layout is required
-    or not.</p>
+    <code>X-PJAX</code> HTTP request header.
+    </p>
+    <p>
+        The <a href="#code/app/controllers/Issues.scala" class="shortcut">Issues controller</a>
+        makes use of this to render a different view, depending on whether a layout is required
+        or not.
+    </p>
 </div>
 <div>
     <h2>Application logic</h2>
