@@ -109,7 +109,7 @@ object Issues extends Controller with ConditionalLayout with JsonRequests {
           issueData => issueRepository.save(IssueData toNewIssue issueData) map (_ => Redirect(routes.Issues.issues()))
         )
       case Accepts.Json() =>
-        jsonAction[IssueData](issue => issueRepository.save(IssueData toNewIssue issue).map(res => Ok(res)))
+        jsonAction[IssueData](issue => issueRepository.save(IssueData toNewIssue issue).map(res => Ok))
     }
   }
 
