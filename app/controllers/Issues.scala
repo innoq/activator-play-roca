@@ -83,6 +83,13 @@ object Issues extends Controller with ConditionalLayout {
     }
   }
 
+  def load(id: String) = Action.async {
+    val issue = issueRepository.findById(id)
+    issue map { issue =>
+      issue.fold(NotFound(""))(i => Ok(HalFormat.issueToHal(i)))
+    }
+  }
+
   def newIssue = Action {
     Ok(views.html.issueFormPage(issueForm.fill(IssueData(summary = "", reporter = "You", openDate = new DateTime))))
   }
