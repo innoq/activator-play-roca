@@ -33,20 +33,30 @@ object HalFormat {
     (__ \ 'comment).writeNullable[String]
   )(unlift(Issue.unapply))
 
+  def issueToHal(issue: Issue) = {
+    Hal.state(issue) include HalLink("self", routes.Issues.load(issue.id).url)
+  }
+
   def issuesToHal(page: Page[Issue], count: Int, projectName: String): HalResource = {
     val nav = Navigation(page, count, projectName)
     val self = HalLink("self", routes.Issues.issues(page.offset, count, projectName).url)
     val next = nav.next map (n => HalLink("next", n.url))
     val prev = nav.prev map (p => HalLink("previous", p.url))
     val links = List(Some(self), next, prev).flatten
-    val issues = Hal.embedded("issues", page.items map (i => Hal.state(i)): _*)
-    links.foldLeft(issues)(_ ++ _)
+    val issues = Hal.embedded("issues", toIssuesResources(page): _*)
+    links.foldLeft(issues)(_ ++ _) include issueStats(page.items.size, count)
+  }
+
+  def issueStats(size: Int, max: Int) =
+    Hal.state(Json.obj("nrOfIssues" -> size, "selectedMax" -> max))
+
+  def toIssuesResources(page: Page[Issue]): List[HalResource] = {
+    page.items map (i => issueToHal(i))
   }
 
   implicit def halWriter(implicit code: Codec): Writeable[HalResource] =
     Writeable(d => code.encode(Json.toJson(d).toString()), Some("application/hal+json"))
 
   val accept = Accepting("application/hal+json")
-
 
 }

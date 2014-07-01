@@ -1,16 +1,21 @@
 package controllers
 
 import com.innoq.rocaplay.domain.issues.Issue
-import helpers.{Pagination, ConditionalLayout, HalFormat}
+import helpers._
 import HalFormat._
 import org.joda.time.DateTime
+import play.api.Logger
 import play.api.data.Forms._
 import play.api.data._
-import play.api.mvc.{Action, Controller}
+import play.api.data.validation.ValidationError
+import play.api.http.MimeTypes
+import play.api.i18n.Messages
+import play.api.libs.json._
+import play.api.mvc.{Accepting, Action, Controller}
 
 import scala.concurrent.Future
 
-object Issues extends Controller with ConditionalLayout {
+object Issues extends Controller with ConditionalLayout with JsonRequests {
 
   import wiring.ApplicationConfig._
 
@@ -60,6 +65,8 @@ object Issues extends Controller with ConditionalLayout {
       "comment" -> optional(text)
     )(IssueData.apply)(IssueData.unapply)
   )
+  
+  implicit val issueReads = Json.reads[IssueData]
 
   def index = Action {
     Redirect(routes.Issues.issues())
@@ -83,15 +90,27 @@ object Issues extends Controller with ConditionalLayout {
     }
   }
 
+  def load(id: String) = Action.async {
+    val issue = issueRepository.findById(id)
+    issue map { issue =>
+      issue.fold(NotFound(""))(i => Ok(HalFormat.issueToHal(i)))
+    }
+  }
+
   def newIssue = Action {
     Ok(views.html.issueFormPage(issueForm.fill(IssueData(summary = "", reporter = "You", openDate = new DateTime))))
   }
 
   def submit = Action.async { implicit request =>
-    issueForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.html.issueFormPage(errors))),
-      issueData => issueRepository.save(IssueData toNewIssue issueData) map (_ => Redirect(routes.Issues.issues()))
-      )
+    render.async {
+      case FormHelper.accept() =>
+        issueForm.bindFromRequest.fold(
+          errors => Future.successful(BadRequest(views.html.issueFormPage(errors))),
+          issueData => issueRepository.save(IssueData toNewIssue issueData) map (_ => Redirect(routes.Issues.issues()))
+        )
+      case Accepts.Json() =>
+        jsonAction[IssueData](issue => issueRepository.save(IssueData toNewIssue issue).map(res => Ok))
+    }
   }
 
 }
