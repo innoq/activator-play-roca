@@ -81,8 +81,7 @@ object Issues extends Controller with ConditionalLayout with JsonRequests {
   }
 
   def issues(offset: Int, count: Int, projectName: String) = ConditionalLayoutAction.async { implicit req =>
-    val issuesF = issueRepository.findByProjectName(projectName, offset, count)
-    issuesF map { issues =>
+    issueRepository.findByProjectName(projectName, offset, count) map { issues =>
       render {
         case Accepts.Html() =>
           val view =

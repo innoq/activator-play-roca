@@ -10,10 +10,8 @@ trait JsonRequests {
 
   def jsonAction[T](toRes: T => Future[Result])(implicit request: play.api.mvc.Request[AnyContent], reads: Reads[T]) = {
     request.body.asJson.map { json =>
-      val data = Json.fromJson[T](json)
-      data.fold(errors => Future.successful(BadRequest(JsonFormat.error(errors))), r => {
-        toRes(r)
-      })
+      Json.fromJson[T](json)
+        .fold(errors => Future.successful(BadRequest(JsonFormat.error(errors))), toRes)
     }.getOrElse(Future.successful(BadRequest(JsonFormat.error("parse error -> json expected"))))
   }
 
