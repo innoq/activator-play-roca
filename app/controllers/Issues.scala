@@ -1,7 +1,7 @@
 package controllers
 
 import com.innoq.rocaplay.domain.issues.Issue
-import helpers.{Pagination, ConditionalLayout, HalFormat}
+import helpers._
 import HalFormat._
 import org.joda.time.DateTime
 import play.api.Logger
@@ -15,7 +15,7 @@ import play.api.mvc.{Accepting, Action, Controller}
 
 import scala.concurrent.Future
 
-object Issues extends Controller with ConditionalLayout {
+object Issues extends Controller with ConditionalLayout with JsonRequests {
 
   import wiring.ApplicationConfig._
 
@@ -100,38 +100,16 @@ object Issues extends Controller with ConditionalLayout {
   def newIssue = Action {
     Ok(views.html.issueFormPage(issueForm.fill(IssueData(summary = "", reporter = "You", openDate = new DateTime))))
   }
-  
-  val multipartAccept = Accepting("application/x-www-form-urlencoded")
-
-  def error(msg: String) = Json.obj("msg" -> msg)
-
-  type JsonErrors = Seq[(JsPath, Seq[ValidationError])]
-
-  def error(errors: JsonErrors) = {
-    val errorFields = errors.map {
-      case (path, vErrors) =>
-        path.toString() -> JsArray(vErrors.map(error =>
-          JsString(Messages.apply(error.message, error.args))))
-    }
-    Json.obj("validation" -> JsObject(errorFields))
-  }
 
   def submit = Action.async { implicit request =>
     render.async {
-      case multipartAccept() =>
+      case FormHelper.accept() =>
         issueForm.bindFromRequest.fold(
           errors => Future.successful(BadRequest(views.html.issueFormPage(errors))),
           issueData => issueRepository.save(IssueData toNewIssue issueData) map (_ => Redirect(routes.Issues.issues()))
         )
       case Accepts.Json() =>
-        request.body.asJson.map { json =>
-          Logger.info(json.toString())
-          val issueData = Json.fromJson[IssueData](json)
-          issueData.fold(errors => Future.successful(BadRequest(error(errors))), issue => {
-            val res = issueRepository.save(IssueData toNewIssue issue)
-            res.map(r => Ok)
-          })
-        }.getOrElse(Future.successful(BadRequest(error("parse error -> json expected"))))
+        jsonAction[IssueData](issue => issueRepository.save(IssueData toNewIssue issue).map(res => Ok(res)))
     }
   }
 
