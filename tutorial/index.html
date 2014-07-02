@@ -61,7 +61,7 @@
     </p>
     <p>
         To determine the content type in which a representation of a resource is to be
-        returned in the response, we can perform server-driven content negotation,
+        returned in the response, we can perform server-driven content negotiation,
         based on <code>Accept</code> headers provided in the request.
     </p>
     <p>
@@ -71,7 +71,7 @@
     </p>
     <p>
         Here, we make use of Play's <code>render</code> method, which we need to pass a
-        <code>PartialFunction[MediaRange, Result</code>.
+        <code>PartialFunction[MediaRange, Result]</code>.
     </p>
     <p>
         For our first case in that partial function, we make use of one Play's predefined request
