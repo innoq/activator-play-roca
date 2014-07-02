@@ -178,15 +178,49 @@
         <a href="#code/app/views/issueForm.scala.html" class="shortcut">issue form</a> for submitting a new
         issue. Here, instead of calling the default template for creating an input text element,
         we make use of our own custom helper template, the
-        <a href="#code/app/views/issueForm.scala.html" class="shortcut">validatingInputText</a>.
+        <a href="#code/app/views/validatingInput.scala.html" class="shortcut">validatingInput</a>
+        helper.
     </p>
     <p>
-        This serves as an oversimplified demonstration of how to attach additional constraint
-        attributes to an input element in Play, based on the constraints specified in the mapping for the
-        respective field using Play's Form API. In this case, the form mapping that serves as the
-        source for the constraint attributes on the input elements is the <code>issueForm</code>
-        defined in the
-        <a href="#code/app/controllers/Issues.scala" class="shortcut">Issues controller</a>.
+        This helper creates an <code>input</code> element and sets its type, plus other HTML5
+        constraint attributes and the error message that should be shown if the constraint
+        of the respective field is violated.
+    </p>
+    <p>
+        In order to stay DRY, these attributes are deduced from the mapping specified using
+        Play's Form API in the <code>issueForm</code> field of the
+        <a href="#code/app/controllers/Issues.scala" class="shortcut">Issues controller</a>:
+        <pre><code>  val issueForm = Form(
+    mapping(
+    "projectName" -> optional(text),
+    "priority" -> optional(text),
+    "issueType" -> optional(text),
+    "summary" -> nonEmptyText,
+    "exceptionStackTrace" -> optional(text),
+    "description" -> optional(text),
+    "reporter" -> nonEmptyText,
+    "componentName" -> optional(text),
+    "componentVersion" -> optional(text),
+    "processingState" -> optional(text),
+    "openDate" -> jodaDate,
+    "closeDate" -> optional(jodaDate),
+    "closeAction" -> optional(text),
+    "assignee" -> optional(text),
+    "comment" -> optional(text)
+    )(IssueData.apply)(IssueData.unapply)
+    )
+</code></pre>
+    </p>
+    <p>
+        The details of deducing the attributes and attribute values for the <code>input</code>
+        element are encapsulated in the
+        <a href="#code/app/helpers/WrappedForm.scala">WrappedForm and WrappedField</a>
+        types.
+    </p>
+    <p>
+        This serves as an oversimplified demonstration of how to provide declarative
+        constraints to the client in the form markup, using a custom input element
+        view template.
     </p>
 </div>
 </body>
