@@ -41,6 +41,13 @@ object Issues extends Controller with ConditionalLayout with JsonRequests {
       issueData.processingState, issueData.openDate, issueData.closeDate, issueData.closeAction,
       issueData.assignee, issueData.comment)
 
+    def toIssue(issueData: IssueData, issueId: String): Issue = Issue(
+      issueId,
+      issueData.projectName, issueData.priority, issueData.issueType, issueData.summary, issueData.exceptionStackTrace,
+      issueData.description, issueData.reporter, issueData.componentName, issueData.componentVersion,
+      issueData.processingState, issueData.openDate, issueData.closeDate, issueData.closeAction,
+      issueData.assignee, issueData.comment)
+
 
     def toIssueData(issues: Issue): IssueData = {
       IssueData(issues.projectName, issues.priority, issues.issueType, issues.summary, issues.exceptionStackTrace,
@@ -98,7 +105,10 @@ object Issues extends Controller with ConditionalLayout with JsonRequests {
       issue.map { issue =>
         render {
           case Accepts.Html() =>
-           Ok(views.html.issueFormPage(WrappedForm(issueForm.fill(IssueData toIssueData issue))))
+           Ok(views.html.issueFormPage(
+             WrappedForm(issueForm.fill(IssueData toIssueData issue)),
+             routes.Issues.updateUnsafe(id)
+           ))
           case HalFormat.accept() =>
            Ok(HalFormat.issueToHal(issue))
         }
@@ -107,14 +117,37 @@ object Issues extends Controller with ConditionalLayout with JsonRequests {
   }
 
   def newIssue = Action { implicit  req =>
-    Ok(views.html.issueFormPage(WrappedForm(issueForm.fill(IssueData(summary = "", reporter = "You", openDate = new DateTime)))))
+    Ok(views.html.issueFormPage(
+      WrappedForm(issueForm.fill(
+        IssueData(summary = "", reporter = "You", openDate = new DateTime))),
+      routes.Issues.submit()
+    ))
+  }
+
+  def updateUnsafe(id: String) = Action.async { implicit request =>
+    render.async {
+      case FormHelper.accept() =>
+        issueForm.bindFromRequest.fold(
+          errors => Future.successful(BadRequest(views.html.issueFormPage(
+            WrappedForm(errors), routes.Issues.updateUnsafe(id)))),
+          issueData => issueRepository.save(IssueData.toIssue(issueData, id)) map (_ => Redirect(routes.Issues.issues()))
+        )
+    }
+  }
+
+  def update(id: String) = Action.async { implicit request =>
+    render.async {
+      case Accepts.Json() =>
+        jsonAction[IssueData](issue => issueRepository.save(IssueData.toIssue(issue, id)).map(res => Ok))
+    }
   }
 
   def submit = Action.async { implicit request =>
     render.async {
       case FormHelper.accept() =>
         issueForm.bindFromRequest.fold(
-          errors => Future.successful(BadRequest(views.html.issueFormPage(WrappedForm(errors)))),
+          errors => Future.successful(BadRequest(views.html.issueFormPage(
+            WrappedForm(errors), routes.Issues.newIssue()))),
           issueData => issueRepository.save(IssueData toNewIssue issueData) map (_ => Redirect(routes.Issues.issues()))
         )
       case Accepts.Json() =>

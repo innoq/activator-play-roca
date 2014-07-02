@@ -2,12 +2,14 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /                           controllers.Issues.index()
-GET     /issue/:id                  controllers.Issues.load(id)
-GET     /issues                     controllers.Issues.issues(offset: Int ?= 0, count: Int ?= 10, projectName: String ?= "")
-GET     /new_issue                  controllers.Issues.newIssue()
-POST    /issues                     controllers.Issues.submit()
+GET         /                     controllers.Issues.index()
+GET         /issue/:id            controllers.Issues.load(id)
+POST        /issue/:id            controllers.Issues.updateUnsafe(id)
+PUT         /issue/:id            controllers.Issues.update(id)
+GET         /issues               controllers.Issues.issues(offset: Int ?= 0, count: Int ?= 10, projectName: String ?= "")
+GET         /new_issue            controllers.Issues.newIssue()
+POST        /issues               controllers.Issues.submit()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
-GET     /webjars/*file              controllers.WebJarAssets.at(file)
+GET         /assets/*file         controllers.Assets.at(path="/public", file)
+GET         /webjars/*file        controllers.WebJarAssets.at(file)

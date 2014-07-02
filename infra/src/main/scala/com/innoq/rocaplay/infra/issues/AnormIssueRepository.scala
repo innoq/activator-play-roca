@@ -20,8 +20,20 @@ class AnormIssueRepository(
   private implicit val ec = executionContext
 
   override def save(issue: Issue) = Future {
-    DB.withConnection {
+    DB.withTransaction {
       implicit connection =>
+        val update =
+          SQL"""
+            update issue set project_name = ${issue.projectName}, priority = ${issue.priority},
+            issue_type = ${issue.issueType}, summary = ${issue.summary},
+            exception_stack_trace = ${issue.exceptionStackTrace}, description = ${issue.description},
+            reporter = ${issue.reporter}, component_name = ${issue.componentName},
+            component_version = ${issue.componentVersion}, processing_state = ${issue.processingState},
+            open_date = ${issue.openDate.getMillis}, close_date = ${issue.closeDate.map(_.getMillis)},
+            close_action = ${issue.closeAction},
+            assignee = ${issue.assignee}, comment = ${issue.comment} where id = ${issue.id}
+             """
+        val insert =
         SQL"""
             insert into issue(id, project_name, priority, issue_type, summary, exception_stack_trace, description,
             reporter, component_name, component_version, processing_state, open_date, close_date, close_action,
@@ -29,7 +41,10 @@ class AnormIssueRepository(
             ${issue.summary}, ${issue.exceptionStackTrace}, ${issue.description},
             ${issue.reporter}, ${issue.componentName}, ${issue.componentVersion}, ${issue.processingState},
             ${issue.openDate.getMillis}, ${issue.closeDate.map(_.getMillis)}, ${issue.closeAction}, ${issue.assignee}, ${issue.comment})
-             """.executeUpdate()
+             """
+        val result = update.executeUpdate()
+        if (result > 0) ()
+        else insert.executeUpdate()
     }
   }
 
@@ -37,7 +52,7 @@ class AnormIssueRepository(
      DB.withConnection {
       implicit c => {
         val where = if (projectName.isEmpty) "" else "where project_name like {projectName}"
-        val query = SQL("select * from issue " + where + " limit {count} offset {offset}")
+        val query = SQL("select * from issue " + where + "order by open_date limit {count} offset {offset}")
           .on(
             'projectName -> s"%$projectName%",
             'count -> count,

@@ -1,7 +1,7 @@
-@(issueForm: helpers.WrappedForm[Issues.IssueData])(implicit lang: Lang)
+@(issueForm: helpers.WrappedForm[Issues.IssueData], action: Call)(implicit lang: Lang)
 <div class="well">
     <h1>Issue</h1>
-    <form action="@routes.Issues.submit()" method="post" role="form" novalidate>
+    <form action="@action.url" method="@action.method" role="form" novalidate>
         @validatingInput(issueForm("summary"), "Summary*")
         @validatingInput(issueForm("reporter"), "Reporter*")
         @validatingInput(issueForm("openDate"), "Open date*")

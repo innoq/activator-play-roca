@@ -8,7 +8,6 @@
     <table id="datatable" class="table table-striped" data-queryString="">
         <thead>
         <tr>
-            <th>Issue-ID</th>
             <th>Issue Type</th>
             <th>Summary</th>
             <th>Priority</th>
@@ -18,12 +17,12 @@
             <th>Assignee</th>
             <th>Created</th>
             <th>Closed</th>
+            <th></th>
         </tr>
         </thead>
         <tbody data-provides="rowlink" data-target="a.rowlink">
         @for(i <- issues) {
         <tr data-issueId="@i.id">
-            <td><a href="@routes.Issues.load(i.id)">@i.id</a></td>
             <td>@i.issueType</td>
             <td>@i.summary</td>
             <td>@i.priority</td>
@@ -33,6 +32,7 @@
             <td>@i.assignee</td>
             <td>@shortDateTime(i.openDate)</td>
             <td>@i.closeDate.map(shortDateTime _)</td>
+            <td><a href="@routes.Issues.load(i.id)">Details</a></td>
         </tr>
         }
         </tbody>
