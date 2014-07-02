@@ -1,0 +1,11 @@
+@(field: helpers.WrappedField, label: String)(implicit lang: Lang)
+@required(field: helpers.WrappedField) = {@if(field.required){required}}
+@hidden(field: Field) = {@if(!field.hasErrors){hidden}}
+<div class="form-group">
+    <label class="control-label" for="@field.field.id">@label</label>
+    <input type="@field.inputType" id="@field.field.id" name="@field.field.name"
+        class="form-control" @required(field) value="@field.field.value" data-on-error="@field.onErrorMsg" />
+    <p class="error alert alert-danger @hidden(field.field)">
+        @if(field.field.hasErrors) {@field.onErrorMsg}
+    </p>
+</div>

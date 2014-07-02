@@ -69,7 +69,7 @@ object Issues extends Controller with ConditionalLayout with JsonRequests {
       "comment" -> optional(text)
     )(IssueData.apply)(IssueData.unapply)
   )
-  
+
   implicit val issueReads = Json.reads[IssueData]
 
   def index = Action {
@@ -98,7 +98,7 @@ object Issues extends Controller with ConditionalLayout with JsonRequests {
       issue.map { issue =>
         render {
           case Accepts.Html() =>
-           Ok(views.html.issueFormPage(issueForm.fill(IssueData toIssueData issue)))
+           Ok(views.html.issueFormPage(WrappedForm(issueForm.fill(IssueData toIssueData issue))))
           case HalFormat.accept() =>
            Ok(HalFormat.issueToHal(issue))
         }
@@ -106,15 +106,15 @@ object Issues extends Controller with ConditionalLayout with JsonRequests {
     }
   }
 
-  def newIssue = Action {
-    Ok(views.html.issueFormPage(issueForm.fill(IssueData(summary = "", reporter = "You", openDate = new DateTime))))
+  def newIssue = Action { implicit  req =>
+    Ok(views.html.issueFormPage(WrappedForm(issueForm.fill(IssueData(summary = "", reporter = "You", openDate = new DateTime)))))
   }
 
   def submit = Action.async { implicit request =>
     render.async {
       case FormHelper.accept() =>
         issueForm.bindFromRequest.fold(
-          errors => Future.successful(BadRequest(views.html.issueFormPage(errors))),
+          errors => Future.successful(BadRequest(views.html.issueFormPage(WrappedForm(errors)))),
           issueData => issueRepository.save(IssueData toNewIssue issueData) map (_ => Redirect(routes.Issues.issues()))
         )
       case Accepts.Json() =>

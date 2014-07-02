@@ -1,4 +1,4 @@
-@(issueForm: Form[Issues.IssueData])
+@(issueForm: helpers.WrappedForm[Issues.IssueData])(implicit lang: Lang)
 @import helpers.NavMenu
 
 @main("Issue", NavMenu.NewIssue) {

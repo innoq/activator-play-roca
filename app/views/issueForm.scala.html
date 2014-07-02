@@ -1,89 +1,24 @@
-@(issueForm: Form[Issues.IssueData])
-
-@import helper._
-@import helpers.FormHelper._
-
+@(issueForm: helpers.WrappedForm[Issues.IssueData])(implicit lang: Lang)
 <div class="well">
     <h1>Issue</h1>
+    <form action="@routes.Issues.submit()" method="post" role="form" novalidate>
+        @validatingInput(issueForm("summary"), "Summary*")
+        @validatingInput(issueForm("reporter"), "Reporter*")
+        @validatingInput(issueForm("openDate"), "Open date*")
+        @validatingInput(issueForm("projectName"), "Project name")
+        @validatingInput(issueForm("priority"), "Priority")
+        @validatingInput(issueForm("issueType"), "Issue type")
+        @validatingInput(issueForm("exceptionStackTrace"), "Exception stack trace")
+        @validatingInput(issueForm("description"), "Description")
+        @validatingInput(issueForm("componentName"), "Component name")
+        @validatingInput(issueForm("componentVersion"), "Component version")
+        @validatingInput(issueForm("assignee"), "Assignee")
+        @validatingInput(issueForm("comment"), "Comment")
+        <div class="actions">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="@routes.Issues.issues()" class="btn btn-default">Cancel</a>
+        </div>
+    </form>
 
-    @helper.form(action = routes.Issues.submit(), 'role -> "form", 'novalidate -> "novalidate") {
 
-    @validatingInputText(
-    issueForm("summary"),
-    'class -> "form-control",
-    '_label -> "Summary*",
-    '_error -> issueForm.error("summary"))
-
-    @validatingInputText(
-    issueForm("reporter"),
-    'class -> "form-control",
-    '_label -> "Reporter*",
-    '_error -> issueForm.error("reporter"))
-
-    @inputText(
-    issueForm("openDate"),
-    'class -> "form-control",
-    '_label -> "Open date*",
-    '_error -> issueForm.error("openDate"))
-
-    @inputText(
-    issueForm("projectName"),
-    'class -> "form-control",
-    '_label -> "Project name",
-    '_error -> issueForm.error("projectName"))
-
-    @inputText(
-    issueForm("priority"),
-    'class -> "form-control",
-    '_label -> "Priority",
-    '_error -> issueForm.error("priority"))
-
-    @inputText(
-    issueForm("issueType"),
-    'class -> "form-control",
-    '_label -> "Issue type",
-    '_error -> issueForm.error("issueType"))
-
-    @inputText(
-    issueForm("exceptionStackTrace"),
-    'class -> "form-control",
-    '_label -> "Exception stack trace",
-    '_error -> issueForm.error("exceptionStackTrace"))
-
-    @inputText(
-    issueForm("description"),
-    'class -> "form-control",
-    '_label -> "Description",
-    '_error -> issueForm.error("description"))
-
-    @inputText(
-    issueForm("componentName"),
-    'class -> "form-control",
-    '_label -> "Component name",
-    '_error -> issueForm.error("componentName"))
-
-    @inputText(
-    issueForm("componentVersion"),
-    'class -> "form-control",
-    '_label -> "Component version",
-    '_error -> issueForm.error("componentVersion"))
-
-    @inputText(
-    issueForm("assignee"),
-    'class -> "form-control",
-    '_label -> "Assignee",
-    '_error -> issueForm.error("assignee"))
-
-    @inputText(
-    issueForm("comment"),
-    'class -> "form-control",
-    '_label -> "Comment",
-    '_error -> issueForm.error("comment"))
-
-    <div class="actions">
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <a href="@routes.Issues.issues()" class="btn btn-default">Cancel</a>
-    </div>
-
-    }
 </div>
