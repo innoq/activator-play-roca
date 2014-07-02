@@ -25,4 +25,4 @@ lazy val web = rocaProject("web").in(file("."))
     pipelineStages := Seq(rjs),
     unmanagedResourceDirectories in Assets += baseDirectory.value / "vendor" / "assets" / "bower_components")
   .aggregate(domain, infra)
-  .dependsOn(domain, infra)
+  .dependsOn(domain, infra, halselhof)

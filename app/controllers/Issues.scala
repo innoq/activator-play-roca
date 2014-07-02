@@ -1,15 +1,17 @@
 package controllers
 
-import play.api.i18n.Messages.Message
-import play.api.mvc.{Action, Controller}
-import play.api.data._
-import play.api.data.Forms._
-import org.joda.time.DateTime
-import scala.concurrent.Future
 import com.innoq.rocaplay.domain.issues.Issue
-import helpers.{ConditionalLayout, Pagination}
+import helpers._
+import HalFormat._
+import org.joda.time.DateTime
+import play.api.data.Forms._
+import play.api.data._
+import play.api.libs.json._
+import play.api.mvc.{Action, Controller}
 
-object Issues extends Controller with ConditionalLayout {
+import scala.concurrent.Future
+
+object Issues extends Controller with ConditionalLayout with JsonRequests {
 
   import wiring.ApplicationConfig._
 
@@ -38,6 +40,14 @@ object Issues extends Controller with ConditionalLayout {
       issueData.description, issueData.reporter, issueData.componentName, issueData.componentVersion,
       issueData.processingState, issueData.openDate, issueData.closeDate, issueData.closeAction,
       issueData.assignee, issueData.comment)
+
+
+    def toIssueData(issues: Issue): IssueData = {
+      IssueData(issues.projectName, issues.priority, issues.issueType, issues.summary, issues.exceptionStackTrace,
+      issues.description, issues.reporter, issues.componentName, issues.componentVersion,
+      issues.processingState, issues.openDate, issues.closeDate, issues.closeAction,
+      issues.assignee, issues.comment)
+    }
   }
   
   val issueForm = Form(
@@ -59,20 +69,40 @@ object Issues extends Controller with ConditionalLayout {
       "comment" -> optional(text)
     )(IssueData.apply)(IssueData.unapply)
   )
+  
+  implicit val issueReads = Json.reads[IssueData]
 
   def index = Action {
     Redirect(routes.Issues.issues())
   }
 
-  def issues(offset: Int, count: Int, projectName: String) = ConditionalLayoutAction.async { req =>
-    val issuesF = issueRepository.findByProjectName(projectName, offset, count)
-    issuesF map { issues =>
-      val view =
-        if (req.requiresLayout) views.html.issuesPage.render _ else views.html.issues.render _
-      Ok(view(
-        issues.items,
-        Pagination.Navigation(issues, count, projectName),
-        projectName))
+  def issues(offset: Int, count: Int, projectName: String) = ConditionalLayoutAction.async { implicit req =>
+    issueRepository.findByProjectName(projectName, offset, count) map { issues =>
+      render {
+        case Accepts.Html() =>
+          val view =
+            if (req.requiresLayout) views.html.issuesPage.render _ else views.html.issues.render _
+          Ok(view(
+            issues.items,
+            Pagination.Navigation(issues, count, projectName),
+            projectName))
+        case HalFormat.accept() =>
+          val halJson = HalFormat.issuesToHal(issues, count, projectName)
+          Ok(halJson)
+      }
+    }
+  }
+
+  def load(id: String) = Action.async { implicit request =>
+    issueRepository.findById(id).map { issue =>
+      issue.map { issue =>
+        render {
+          case Accepts.Html() =>
+           Ok(views.html.issueFormPage(issueForm.fill(IssueData toIssueData issue)))
+          case HalFormat.accept() =>
+           Ok(HalFormat.issueToHal(issue))
+        }
+      }.getOrElse(NotFound)
     }
   }
 
@@ -81,10 +111,15 @@ object Issues extends Controller with ConditionalLayout {
   }
 
   def submit = Action.async { implicit request =>
-    issueForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(views.html.issueFormPage(errors))),
-      issueData => issueRepository.save(IssueData toNewIssue issueData) map (_ => Redirect(routes.Issues.issues()))
-      )
+    render.async {
+      case FormHelper.accept() =>
+        issueForm.bindFromRequest.fold(
+          errors => Future.successful(BadRequest(views.html.issueFormPage(errors))),
+          issueData => issueRepository.save(IssueData toNewIssue issueData) map (_ => Redirect(routes.Issues.issues()))
+        )
+      case Accepts.Json() =>
+        jsonAction[IssueData](issue => issueRepository.save(IssueData toNewIssue issue).map(res => Ok))
+    }
   }
 
 }
