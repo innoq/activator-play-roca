@@ -1,11 +1,16 @@
 import com.innoq.rocaplay.domain.issues.Issue
+import com.softwaremill.macwire.{InstanceLookup, Macwire}
+import controllers.Issues
 import org.joda.time.DateTime
 import play.api._
 import scala.concurrent.ExecutionContext
 import scala.util.Random
 import wiring.ApplicationConfig
 
-trait Global extends GlobalSettings {
+trait Global extends GlobalSettings with Macwire {
+
+  def instanceLookup: InstanceLookup
+  override def getControllerInstance[A](c: Class[A]) = instanceLookup.lookupSingleOrThrow(c)
 
   protected def applicationConfig: ApplicationConfig
   private def issueRepository = applicationConfig.issueRepository
@@ -29,5 +34,6 @@ trait Global extends GlobalSettings {
 }
 
 object Global extends Global {
+  override def instanceLookup = InstanceLookup(valsByClass(ApplicationConfig))
   override def applicationConfig = ApplicationConfig
 }

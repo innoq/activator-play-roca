@@ -15,5 +15,7 @@ object Dependencies {
   val webJarsPlay = Organizations.webJars %% "webjars-play" % playVersion
   val bootstrap = Organizations.webJars % "bootstrap" % "3.1.1-1"
 
+  val macwire = "com.softwaremill.macwire" %% "macros" % "0.6"
+
 
 }

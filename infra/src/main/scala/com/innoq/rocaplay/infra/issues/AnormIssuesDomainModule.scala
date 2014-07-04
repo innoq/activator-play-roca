@@ -7,9 +7,10 @@ import scala.concurrent.ExecutionContext
 
 trait AnormIssuesDomainModule extends IssuesDomainModule {
 
+  import com.softwaremill.macwire.MacwireMacros._
+
   implicit def currentApplication: Application
   def issuesDbExecutionContext: ExecutionContext
 
-  override def issueRepository: IssueRepository =
-    new AnormIssueRepository(currentApplication, issuesDbExecutionContext)
+  override lazy val issueRepository: IssueRepository = wire[AnormIssueRepository]
 }
