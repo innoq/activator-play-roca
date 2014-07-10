@@ -1,1 +1,2 @@
 error.date=Date value expected (mm/dd/yyyy)
+error.expected.jodadate.format=Date value expected (yyyy-MM-dd)
