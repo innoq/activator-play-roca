@@ -32,7 +32,7 @@ class Issues(issueRepository: IssueRepository, ec: ExecutionContext) extends Con
             issues.items,
             Pagination.Navigation(issues, count, projectName),
             projectName))
-        case HalFormat.accept() =>
+        case HalFormat.accept() | Accepts.Json() =>
           val halJson = HalFormat.issuesToHal(issues, count, projectName)
           Ok(halJson)
       }
@@ -48,7 +48,7 @@ class Issues(issueRepository: IssueRepository, ec: ExecutionContext) extends Con
              WrappedForm(issueForm.fill(IssueData toIssueData issue)),
              routes.Issues.updateUnsafe(id)
            ))
-          case HalFormat.accept() =>
+          case HalFormat.accept() | Accepts.Json() =>
            Ok(HalFormat.issueToHal(issue))
         }
       }.getOrElse(NotFound)
