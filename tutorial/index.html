@@ -55,7 +55,7 @@
         These alternative representations should provide the same hyperlinks as the HTML
         representations, provided in a standardised, well-understood format. In our example,
         for the issues collection resource, we make use of
-        <a href="http://tools.ietf.org/html/draft-kelly-json-hal-06">HAL</a>, the
+        <a href="http://stateless.co/hal_specification.html">HAL</a>, the
         JSON Hypertext Application Language, to provide the same meaningful pagination links
         as in the HTML representation.
     </p>
@@ -85,10 +85,10 @@
         <pre><code>val accept = Accepting("application/hal+json")</code></pre>
     </p>
     <p>
-        If <code>HAL+JSON</code> is accepted, we respond with an appropriate instance
+        If <code>HAL+JSON</code> or <code>application/json</code> is accepted, we respond with an appropriate instance
         of <code>HalResource</code>, provided by the <code>issuesToHal</code> method:
         <pre><code>render {
-  case HalFormat.accept() =>
+  case HalFormat.accept() | Accepts.Json() =>
     val halJson = HalFormat.issuesToHal(issues, count, projectName)
     Ok(halJson)
 }</code></pre>
@@ -221,6 +221,41 @@
         This serves as an oversimplified demonstration of how to provide declarative
         constraints to the client in the form markup, using a custom input element
         view template.
+    </p>
+</div>
+<div>
+    <h2>Summary and next steps</h2>
+    <p>
+        In this tutorial, you have learned about some of the principles that are consolidated
+        in the Resource-oriented Client Architecture (ROCA) style, and how to make use of Play's
+        Scala API to implement and support the adherence to these principles.
+    </p>
+    <p>
+        In particular, we have looked at the principles of adhering to REST, providing additional
+        representations in other formats, using JavaScript unobtrusively to improve the user experience,
+        and keeping the application logic on the server.
+    </p>
+    <p>
+        In terms of Play features, we have made use of custom request extractors for content negotation,
+        the possibility to provide an instance of the <code>Writable</code> type class for automatically
+        serializing our HAL resources to a response body, and custom action builders for hiding the
+        details of whether the response for a request requires the full layout surrounding the main
+        content HTML.
+    </p>
+    <p>
+        To go further, you may want to look at <a href="http://roca-style.org/widgets.html">some examples of JavaScript widgets that can be used
+        unobtrusively</a>.
+    </p>
+    <p>
+        To learn more about PJAX (pushState + ajax), look at <a href="https://github.com/defunkt/jquery-pjax">the GitHub project</a>.
+        There is also a <a href="http://userbag.co.uk/demo/pjax/">standalone implementation of PJAX</a> that
+        does not require jQuery.
+    </p>
+    <p>
+        To learn more about hypermedia JSON formats striving for standardisation, you may want to
+        look at the specifications/documentations for <a href="http://stateless.co/hal_specification.html">HAL</a>,
+        <a href="http://sirenspec.org">Siren</a>, or
+        <a href="http://amundsen.com/media-types/collection/format/">Collection JSON</a>.
     </p>
 </div>
 </body>
