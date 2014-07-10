@@ -90,7 +90,11 @@ class Issues(issueRepository: IssueRepository, ec: ExecutionContext) extends Con
           issueData => issueRepository.save(IssueData toNewIssue issueData) map (_ => Redirect(routes.Issues.issues()))
         )
       case Accepts.Json() =>
-        jsonAction[IssueData](issue => issueRepository.save(IssueData toNewIssue issue).map(res => Ok))
+        jsonAction[IssueData] { issue =>
+          val newIssue = IssueData toNewIssue issue
+          issueRepository save newIssue map (_ => Created
+            .withHeaders(LOCATION -> routes.Issues.load(newIssue.id).url))
+        }
     }
   }
 
