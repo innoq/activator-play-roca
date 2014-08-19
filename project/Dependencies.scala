@@ -1,7 +1,6 @@
 import sbt._
 
 object Dependencies {
-  val playVersion = "2.3.0"
 
   object Organizations {
     val webJars = "org.webjars"
@@ -12,10 +11,10 @@ object Dependencies {
 
   val halselhof = uri("git://github.com/tobnee/HALselhof.git")
 
-  val webJarsPlay = Organizations.webJars %% "webjars-play" % playVersion
+  val webJarsPlay = Organizations.webJars %% "webjars-play" % "2.3.0"
   val bootstrap = Organizations.webJars % "bootstrap" % "3.1.1-1"
 
-  val macwire = "com.softwaremill.macwire" %% "macros" % "0.6"
+  val macwire = "com.softwaremill.macwire" %% "macros" % "0.7"
 
 
 }
