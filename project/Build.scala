@@ -8,7 +8,7 @@ object Build {
       name := s"activator-play-roca-$id",
       organization := "com.innoq",
       organizationName := "innoQ Deutschland GmbH",
-      scalaVersion := "2.11.4",
+      scalaVersion := "2.11.7",
       scalacOptions ++= Seq("-feature", "-deprecation"),
       libraryDependencies += macwire,
       resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases"
