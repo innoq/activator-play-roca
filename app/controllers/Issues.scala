@@ -3,6 +3,7 @@ package controllers
 import com.innoq.rocaplay.domain.issues.{IssueRepository, Issue}
 import helpers._
 import HalFormat._
+import play.api.mvc.hal._
 import org.joda.time.DateTime
 import play.api.data.Forms._
 import play.api.data._
@@ -32,7 +33,7 @@ class Issues(issueRepository: IssueRepository, ec: ExecutionContext) extends Con
             issues.items,
             Pagination.Navigation(issues, count, projectName),
             projectName))
-        case HalFormat.accept() | Accepts.Json() =>
+        case AcceptHal() | Accepts.Json() =>
           val halJson = HalFormat.issuesToHal(issues, count, projectName)
           Ok(halJson)
       }
@@ -48,7 +49,7 @@ class Issues(issueRepository: IssueRepository, ec: ExecutionContext) extends Con
              WrappedForm(issueForm.fill(IssueData toIssueData issue)),
              routes.Issues.updateUnsafe(id)
            ))
-          case HalFormat.accept() | Accepts.Json() =>
+          case AcceptHal() | Accepts.Json() =>
            Ok(HalFormat.issueToHal(issue))
         }
       }.getOrElse(NotFound)

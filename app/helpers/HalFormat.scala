@@ -54,9 +54,4 @@ object HalFormat {
     page.items map (i => issueToHal(i))
   }
 
-  implicit def halWriter(implicit code: Codec): Writeable[HalResource] =
-    Writeable(d => code.encode(Json.toJson(d).toString()), Some("application/hal+json"))
-
-  val accept = Accepting("application/hal+json")
-
 }
